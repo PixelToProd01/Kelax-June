@@ -1,0 +1,10 @@
+User-agent: *
+Allow: /
+
+# Block internal routes (optional)
+Disallow: /admin/
+Disallow: /dashboard/
+Disallow: /api/
+
+# Sitemap location
+Sitemap: https://yourdomain.com/sitemap.xml
