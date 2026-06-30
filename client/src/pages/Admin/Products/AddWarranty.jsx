@@ -204,13 +204,27 @@ const AddWarranty = () => {
           </select>
 
           {/* Warranty Image Add */}
-          <input
-            type="file"
-            accept="image/*"
-            onChange={(e) => handleImageChange(e.target.files[0])}
-            required
-            className="w-full border rounded-xl p-3"
-          />
+          <div className="w-full">
+            <label className="block mb-2 font-medium">
+              Upload Product Image
+            </label>
+            <label className="w-full border rounded-xl p-3 flex items-center justify-between cursor-pointer bg-white">
+              <span className="text-gray-500">
+                {image ? image.name : "Select Image file"}
+              </span>
+
+              <span className="bg-blue-600 text-white px-4 py-2 rounded-lg">
+                Browse
+              </span>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(e) => handleImageChange(e.target.files[0])}
+                required
+                className="hidden"
+              />
+            </label>
+          </div>
 
           {imagePreview && (
             <img
@@ -221,6 +235,7 @@ const AddWarranty = () => {
           )}
 
           <div className="grid grid-cols-2 gap-4">
+            
             <input
               type="date"
               name="validFrom"
