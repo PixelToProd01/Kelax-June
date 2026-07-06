@@ -98,10 +98,10 @@ const ViewWarranty = () => {
                 <tr>
                   <th
                     className="
-              px-4 py-3 text-left w-12 border-r border-gray-500
+              px-4 py-3 text-left w-22 border-r border-gray-500
             "
                   >
-                    #
+                    S. No.
                   </th>
 
                   <th className="p-4 text-left border-r border-gray-500">
