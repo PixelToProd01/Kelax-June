@@ -235,7 +235,6 @@ const AddWarranty = () => {
           )}
 
           <div className="grid grid-cols-2 gap-4">
-            
             <input
               type="date"
               name="validFrom"
