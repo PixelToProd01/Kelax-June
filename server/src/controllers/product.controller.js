@@ -24,16 +24,12 @@ export const createProduct = async (req, res) => {
       specifications = JSON.parse(req.body.specifications);
     }
 
-    const imagePath =
-      "/" + req.files.image[0].path.replace(/\\/g, "/");
+    const imagePath = "/" + req.files.image[0].path.replace(/\\/g, "/");
 
-    const datasheetPath =
-      "/" + req.files.datasheet[0].path.replace(/\\/g, "/");
+    const datasheetPath = "/" + req.files.datasheet[0].path.replace(/\\/g, "/");
 
     const slug =
-      slugify(name, { lower: true, strict: true }) +
-      "-" +
-      Date.now();
+      slugify(name, { lower: true, strict: true }) + "-" + Date.now();
 
     const product = await Product.create({
       name,
@@ -92,12 +88,11 @@ export const getAllProducts = async (req, res) => {
   }
 };
 
-
 //  Get All Product By Category
 export const getProductsByCategory = async (req, res) => {
   try {
     const { category } = req.params;
-    
+
     if (!["server", "workstation"].includes(category)) {
       return res.status(400).json({
         success: false,
@@ -167,15 +162,10 @@ export const deleteProduct = async (req, res) => {
     const product = await Product.findById(req.params.id);
 
     if (!product) {
-      return res.status(404).json({ message: "Product not found" });
-    }
-
-    if (product.image) {
-      fs.unlinkSync(product.image.substring(1));
-    }
-
-    if (product.datasheet) {
-      fs.unlinkSync(product.datasheet.substring(1));
+      return res.status(404).json({
+        success: false,
+        message: "Product not found",
+      });
     }
 
     await product.deleteOne();
@@ -185,6 +175,11 @@ export const deleteProduct = async (req, res) => {
       message: "Product deleted successfully",
     });
   } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
+    console.log(error);
+
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
   }
 };
