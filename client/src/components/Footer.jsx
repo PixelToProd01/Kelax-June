@@ -65,9 +65,9 @@ export default function Footer() {
         <FooterColumn
           title="Support"
           links={[
-            { label: "Technical Support", path: "/technical-support" },
-            { label: "Warranty Check", path: "/warranty-check" },
-            { label: "Downloads", path: "/downloads" },
+            { label: "Warranty Call Log", path: "/support/warranty-call-log" },
+            { label: "Warranty Check", path: "/support/warranty-check" },
+            { label: "Downloads", path: "/support/downloads" },
             { label: "Solutions", path: "/solutions" },
           ]}
           navigate={navigate}

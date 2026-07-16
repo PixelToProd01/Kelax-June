@@ -49,11 +49,27 @@ const ViewProducts = () => {
         withCredentials: true,
       });
 
-      toast.success("Warranty Deleted");
+      toast.success("Product Deleted");
 
       fetchProducts();
     } catch (err) {
       toast.error("Delete failed");
+    }
+  };
+
+  const editProduct = async (id) => {
+    if (!confirm("Edit Product?")) return;
+
+    try {
+      await axios.edit(`${serverUrl}/api/product/update-product/${id}`, {
+        withCredentials: true,
+      });
+
+      toast.success("Product Edited");
+
+      fetchProducts();
+    } catch (error) {
+      toast.error("Edit failed");
     }
   };
 
@@ -173,6 +189,21 @@ const ViewProducts = () => {
                       >
                         Delete
                       </button>
+                      <button
+                        onClick={() => editProduct(p._id)}
+                        className="
+              bg-gray-500
+              hover:bg-gray-700
+              text-white
+              ml-4
+              px-5
+              py-2
+              rounded-lg
+              cursor-pointer
+              "
+                      >
+                        Edit
+                      </button>
                     </td>
                   </tr>
                 ))}
@@ -214,6 +245,20 @@ const ViewProducts = () => {
     "
                   >
                     Delete
+                  </button>
+                  <button
+                    onClick={() => editProduct(item._id)}
+                    className="
+    mt-3
+    bg-gray-500
+    text-white
+    px-4
+    py-2
+    rounded-lg
+    w-full
+    "
+                  >
+                    Edit
                   </button>
                 </div>
               </div>

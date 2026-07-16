@@ -112,7 +112,7 @@ const ProductDetails = () => {
           <div className="bg-white p-8 rounded-xl shadow-md">
 
             <h2 className="text-2xl font-semibold mb-6">
-              Specifications
+              QuickSpecs:
             </h2>
 
             <div className="overflow-x-auto">
