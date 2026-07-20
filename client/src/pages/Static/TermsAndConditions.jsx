@@ -146,7 +146,7 @@ const TermsAndConditions = () => {
 
       <p>
         These Terms of Service are governed by and interpreted in accordance
-        with the laws of the <strong>United States</strong>. You irrevocably
+        with the laws of the <strong>India. </strong>You irrevocably
         submit to the exclusive jurisdiction of the courts in that location.
       </p>
     </div>
