@@ -124,7 +124,7 @@ export default function ContactPage() {
               {/* PHONE */}
               <div>
                 <p className="font-bold text-sm">PHONE</p>
-                <p className="text-gray-700 text-sm break-words">9355854953</p>
+                <p className="text-gray-700 text-sm break-words">8800605034</p>
               </div>
 
               {/* EMAIL */}
