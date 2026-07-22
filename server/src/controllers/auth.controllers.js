@@ -522,12 +522,12 @@ export const downloadCertificate = async (req, res) => {
     );
 
     // Background image
-    doc.image(templatePath, 0, 0, { width: 842 });
+    doc.image(templatePath, 0, 0, { width: 842, height: 600 });
 
     // Partner Name
     doc.fontSize(28)
       .fillColor("#0f3b63")
-      .text(user.company.name, 50, 230, {
+      .text(user.company.name, 65, 237, {
         align: "center",
       });
 
@@ -537,15 +537,15 @@ export const downloadCertificate = async (req, res) => {
       .text(
         // `Approval Date : ${user.activeFrom.toDateString()}`,
         ` ${user.activeFrom.toDateString()}`,
-        550,
-        390
+        600,
+        452
       );
 
     doc.text(
       // `Cert. Expiry Date : ${user.activeTill.toDateString()}`,
       ` ${user.activeTill.toDateString()}`,
-      560,
-      415
+      600,
+      484
     );
 
     doc.end(); // ✅ End after everything
