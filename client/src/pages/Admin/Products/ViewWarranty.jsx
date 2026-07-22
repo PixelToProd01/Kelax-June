@@ -195,20 +195,20 @@ const ViewWarranty = () => {
                     {/* CUSTOMER */}
 
                     <td className=" p-4 space-y-1 border-r border-gray-500">
-                      <p>
+                      {/* <p>
                         <b>Name:</b>
                         {p.customerName}
-                      </p>
+                      </p> */}
 
                       <p className="mt-2">
                         <b>Address:</b>
                         {p.customerAddress}
                       </p>
 
-                      <p className="mt-2">
+                      {/* <p className="mt-2">
                         <b>Reseller:</b>
                         {p.resellerName}
-                      </p>
+                      </p> */}
 
                       <p className="mt-2">
                         <b>Config:</b>
