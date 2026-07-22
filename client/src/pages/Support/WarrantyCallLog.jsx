@@ -210,7 +210,7 @@ const WarrantyCallLog = () => {
                 </p>
 
                 <h3 className="text-2xl font-bold mt-2 break-all">
-                  info@kelax.in
+                  support@kelax.in
                 </h3>
               </div>
             </div>
