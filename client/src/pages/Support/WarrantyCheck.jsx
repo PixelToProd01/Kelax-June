@@ -179,21 +179,21 @@ const WarrantyCheck = () => {
                           </p>
                         </div>
 
-                        <div>
+                        {/* <div>
                           <p className="text-sm text-indigo-100">
                             Customer Name
                           </p>
 
                           <p className="font-semibold">{data.customerName}</p>
-                        </div>
+                        </div> */}
 
-                        <div>
+                        {/* <div>
                           <p className="text-sm text-indigo-100">
                             Reseller Name
                           </p>
 
                           <p className="font-semibold">{data.resellerName}</p>
-                        </div>
+                        </div> */}
                       </div>
                     </div>
                   </div>
@@ -260,10 +260,10 @@ const WarrantyCheck = () => {
                       </p>
 
                       <a
-                        href="mailto:info@kelax.in"
+                        href="mailto:support@kelax.in"
                         className="font-semibold text-[#006db8]"
                       >
-                        info@kelax.in
+                        support@kelax.in
                       </a>
                     </div>
 
@@ -271,10 +271,10 @@ const WarrantyCheck = () => {
                       <p className="text-sm text-gray-500 mb-1">Call Us</p>
 
                       <a
-                        href="tel:9654094331"
+                        href="tel:8800605034"
                         className="font-semibold text-[#006db8]"
                       >
-                        +91 9654094331
+                        +91 8800605034
                       </a>
                     </div>
                   </div>
