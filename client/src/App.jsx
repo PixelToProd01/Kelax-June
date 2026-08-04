@@ -67,7 +67,7 @@ import DownloadDrivers from "./pages/Support/DownloadDrivers.jsx";
 
 // export const serverUrl = "http://localhost:8000";  // Work on Laptop only
 
-export const serverUrl = "";   // work for kelax use only When Code Is Deploy On Server
+export const serverUrl = "";   // work for kelax use only When Code Is Deploy On Server Only
 
 // export const serverUrl = "http://192.168.1.118:8000";  // Work
 
