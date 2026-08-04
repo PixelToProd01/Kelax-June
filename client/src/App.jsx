@@ -59,16 +59,21 @@ import ViewWarranty from "./pages/Admin/Products/ViewWarranty.jsx";
 import WarrantyCallLog from "./pages/Support/WarrantyCallLog.jsx";
 import Company from "./pages/Static/Company.jsx";
 import Resources from "./pages/Static/Resources.jsx";
+
+// NEW --- After Deployment
+// import UploadDrivers from "./pages/Admin/Products/UploadDrivers.jsx";
+import DownloadDrivers from "./pages/Support/DownloadDrivers.jsx";
 // import AdminProfile from "./layouts/Admin/Profile/AdminProfile.jsx";
 
-export const serverUrl = "http://localhost:8000";  // Work
+// export const serverUrl = "http://localhost:8000";  // Work on Laptop only
 
-// export const serverUrl = "http://192.168.1.162:8000";  // Work 
+export const serverUrl = "";   // work for kelax use only When Code Is Deploy On Server
+
+// export const serverUrl = "http://192.168.1.118:8000";  // Work
 
 // export const serverUrl = window.location.hostname === "localhost" ? "http://localhost:8000" : "http://192.168.1.162:8000";   // Its Not Working
 
 // export const serverUrl = "http://192.168.1.162:8000" |  "http://localhost:8000";  // Its Not Working
-
 
 // export const serverUrl = "https://api-kelax.onrender.com";
 
@@ -195,6 +200,9 @@ const App = () => {
 
         {/* Warranty Check */}
         <Route path="support/warranty-check" element={<WarrantyCheck />} />
+
+        {/* Download Drivers */}
+        <Route path="support/downloads" element={<DownloadDrivers />} />
         {/* <Route path="/products" element={<Products />} />
         <Route path="/products/servers" element={<Servers />} />
         <Route path="/products/workstation" element={<Workstation />} />
@@ -219,6 +227,7 @@ const App = () => {
             <Route path="view-product" element={<ViewProducts />}/>
             <Route path="add-warranty" element={<AddWarranty />}/>
             <Route path="view-warranty" element={<ViewWarranty />}/>
+            {/* <Route path="upload-drivers" element={<UploadDrivers />}/> */}
             <Route path="partners" element={<AdminPartners />} />
             <Route path="customers" element={<AdminCustomers />} />
             {/* <Route path="create-product" element={<CreateProduct />} /> */}
@@ -254,6 +263,8 @@ const App = () => {
           <Route path="customers" element={<ViewCustomers />} />
         </Route> */}
         {/* {AdminRoutes} */}
+
+
 
         {/* Product Page Routing */}
         <Route path="/products/:category" element={<ProductList />}/>
