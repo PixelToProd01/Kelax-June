@@ -139,7 +139,7 @@ export default function ContactPage() {
               <div className="max-w-md">
                 <p className="font-bold text-sm">HEAD QUARTER</p>
                 <p className="text-gray-700 text-sm leading-relaxed">
-                  Kelax Solutions Pvt. Ltd, <br/> Ground Floor, Block-A Building No.-101 Sector-63, Noida, UP-201301
+                  Kelax Solutions Pvt. Ltd, <br/> Ground Floor, A-101, A Block, <br />Sector 63, Noida, Uttar Pradesh 201301
                 </p>
               </div>
             </div>
