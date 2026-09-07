@@ -66,7 +66,7 @@ const ViewWarranty = () => {
   };
 
   return (
-    <div className="bg-gray-100 p-3 md:p-2">
+    <div className="min-h-screen max-w-4xl mx-auto bg-gray-100 p-3 md:p-2">
       <h1 className="text-2xl font-bold mb-5">Warranty Management</h1>
 
       {loading ? (
@@ -195,20 +195,20 @@ const ViewWarranty = () => {
                     {/* CUSTOMER */}
 
                     <td className=" p-4 space-y-1 border-r border-gray-500">
-                      {/* <p>
+                      <p>
                         <b>Name:</b>
                         {p.customerName}
-                      </p> */}
+                      </p>
 
                       <p className="mt-2">
                         <b>Address:</b>
                         {p.customerAddress}
                       </p>
 
-                      {/* <p className="mt-2">
+                      <p className="mt-2">
                         <b>Reseller:</b>
                         {p.resellerName}
-                      </p> */}
+                      </p>
 
                       <p className="mt-2">
                         <b>Config:</b>

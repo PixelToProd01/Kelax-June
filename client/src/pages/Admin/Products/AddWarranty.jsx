@@ -126,51 +126,7 @@ const AddWarranty = () => {
         )}
 
         <form onSubmit={handleSubmit} className="space-y-5">
-          <label className="w-full p-2">Enter Customer Name</label>
-          <input
-            type="text"
-            name="customerName"
-            placeholder="Customer Name"
-            value={formData.customerName}
-            onChange={handleChange}
-            required
-            className="w-full border rounded-xl p-3"
-          />
-
-          <label className="w-full p-2">Enter Reseller Name</label>
-          <input
-            type="text"
-            name="resellerName"
-            placeholder="Reseller Name"
-            value={formData.resellerName}
-            onChange={handleChange}
-            required
-            className="w-full border rounded-xl p-3"
-          />
-
-          <label className="w-full p-2">Enter Customer Address</label>
-          <input
-            type="text"
-            name="customerAddress"
-            placeholder="Customer Address"
-            value={formData.customerAddress}
-            onChange={handleChange}
-            required
-            className="w-full border rounded-xl p-3"
-          />
-
-          <label className="w-full p-2">Enter Product Configuration</label>
-          <input
-            type="text"
-            name="productConfiguration"
-            placeholder="Product Configuration"
-            value={formData.productConfiguration}
-            onChange={handleChange}
-            required
-            className="w-full border rounded-xl p-3"
-          />
-
-          <label className="w-full p-2">Enter Serial Number</label>
+          <label className="w-full p-2">Serial Number *</label>
           <input
             type="text"
             name="serialNumber"
@@ -181,18 +137,64 @@ const AddWarranty = () => {
             className="w-full border rounded-xl p-3"
           />
 
-          <label className="w-full p-2">Enter Model Number</label>
+          <label className="w-full p-2">Model Number</label>
           <input
             type="text"
             name="productName"
             placeholder="Model Number"
             value={formData.productName}
             onChange={handleChange}
+            // required
+            className="w-full border rounded-xl p-3"
+          />
+
+          <label className="w-full p-2">Customer Name</label>
+          <input
+            type="text"
+            name="customerName"
+            placeholder="Customer Name"
+            value={formData.customerName}
+            onChange={handleChange}
+            // required
+            className="w-full border rounded-xl p-3"
+          />
+
+          {/* Customer  ---->  Email, Contact Number, Address, Company Name */}
+
+          <label className="w-full p-2">Reseller Name</label>
+          <input
+            type="text"
+            name="resellerName"
+            placeholder="Reseller Name"
+            value={formData.resellerName}
+            onChange={handleChange}
+            // required
+            className="w-full border rounded-xl p-3"
+          />
+
+          <label className="w-full p-2">Customer Address</label>
+          <input
+            type="text"
+            name="customerAddress"
+            placeholder="Customer Address"
+            value={formData.customerAddress}
+            onChange={handleChange}
+            // required
+            className="w-full border rounded-xl p-3"
+          />
+
+          <label className="w-full p-2">Product Configuration *</label>
+          <input
+            type="text"
+            name="productConfiguration"
+            placeholder="Product Configuration"
+            value={formData.productConfiguration}
+            onChange={handleChange}
             required
             className="w-full border rounded-xl p-3"
           />
 
-          <label className="w-full p-2">Enter Warranty Type</label>
+          <label className="w-full p-2">Warranty Type</label>
           <select
             name="warrantyType"
             value={formData.warrantyType}

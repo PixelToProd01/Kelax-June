@@ -61,8 +61,9 @@ import Company from "./pages/Static/Company.jsx";
 import Resources from "./pages/Static/Resources.jsx";
 
 // NEW --- After Deployment
-// import UploadDrivers from "./pages/Admin/Products/UploadDrivers.jsx";
+import UploadDrivers from "./pages/Admin/Products/UploadDrivers.jsx";
 import DownloadDrivers from "./pages/Support/DownloadDrivers.jsx";
+import ViewDrivers from "./pages/Admin/Products/ViewDrivers.jsx";
 // import AdminProfile from "./layouts/Admin/Profile/AdminProfile.jsx";
 
 // export const serverUrl = "http://localhost:8000";  // Work on Laptop only
@@ -227,7 +228,8 @@ const App = () => {
             <Route path="view-product" element={<ViewProducts />}/>
             <Route path="add-warranty" element={<AddWarranty />}/>
             <Route path="view-warranty" element={<ViewWarranty />}/>
-            {/* <Route path="upload-drivers" element={<UploadDrivers />}/> */}
+            <Route path="upload-drivers" element={<UploadDrivers />}/>
+            <Route path="view-drivers" element={<ViewDrivers />}/>
             <Route path="partners" element={<AdminPartners />} />
             <Route path="customers" element={<AdminCustomers />} />
             {/* <Route path="create-product" element={<CreateProduct />} /> */}

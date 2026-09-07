@@ -14,6 +14,7 @@ import authRouter from "./routes/auth.routes.js";
 import adminRouter from "./routes/admin.routes.js";
 import productRouter from "./routes/product.routes.js";
 import warrantyRouter from "./routes/warranty.routes.js";
+import driverRouter from "./routes/driver.routes.js";
 
 // Import Routes
 // import otpRoutes from "./routes/otp.routes.js";
@@ -26,7 +27,7 @@ const app = express();
 const PORT = process.env.PORT || 4000;
 
 /* -------------------- SECURITY (TOP) -------------------- */
-// app.use(helmet());
+app.use(helmet());
 
 // app.use(
 //   helmet({
@@ -37,14 +38,14 @@ const PORT = process.env.PORT || 4000;
 app.use(
   helmet({
     crossOriginResourcePolicy: { policy: "cross-origin" },
-  })
+  }),
 );
 
 // ----------------- CORS  ----------------
 
 app.use(
   cors({
-    origin: [process.env.CLIENT_URL || "http://localhost:5173"],
+    origin: [process.env.CLIENT_URL || "http://localhost:auto"],
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE"],
   }),
@@ -71,7 +72,10 @@ app.use("/api/admin", adminRouter);
 app.use("/api/product", productRouter);
 
 //  -------------------- Route For Warranty  -------------------
-app.use('/api/warranty', warrantyRouter)
+app.use("/api/warranty", warrantyRouter);
+
+//  -------------------- Route For Drivers  --------------------
+app.use("/api/driver", driverRouter);
 
 // app.use("/api/otp", otpRoutes);
 // app.use("/api/auth", authRoutes);
@@ -98,7 +102,7 @@ const startServer = async () => {
     await import("./cron/userExpiry.cron.js");
 
     // ✅ Start Warranty Expiry Cron
-    await import("./cron/warrantyExpiry.cron.js")
+    await import("./cron/warrantyExpiry.cron.js");
 
     // server.listen(PORT, "0.0.0.0", () => {
     app.listen(PORT, "0.0.0.0", () => {

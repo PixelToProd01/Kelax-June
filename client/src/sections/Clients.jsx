@@ -51,7 +51,7 @@ export default function Clients() {
       data-aos="fade-right"
     >
       {/* Heading */}
-      <h2 className="text-center text-4xl font-bold mb-6">Sector We Serve Our Clients</h2>
+      <h2 className="text-center text-4xl font-bold mb-6">Sector We Serve</h2>
 
       {/* Description */}
       <p className="max-w-4xl mx-auto text-center text-gray-200 leading-relaxed mb-12 px-4">

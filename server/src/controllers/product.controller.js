@@ -183,3 +183,67 @@ export const deleteProduct = async (req, res) => {
     });
   }
 };
+
+// Get Product By ID For UPdate Product ------ Get Single Product details by ID
+export const getProductById = async (req, res) => {
+  try {
+    const product = await Product.findById(req.params.id);
+    if (!product) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Product Not Found" });
+    }
+    res.status(200).json({ success: true, product });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+// Edit Product
+export const updateProduct = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { name, category, introduction, specifications } = req.body;
+
+    const existingProduct = await Product.findById(id);
+    if (!existingProduct) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Product Not Found" });
+    }
+
+    // Dynamic Updating
+    existingProduct.name = name || existingProduct.name;
+    existingProduct.category = category || existingProduct.category;
+    existingProduct.introduction = introduction || existingProduct.introduction;
+
+    if (specifications) {
+      existingProduct.specifications =
+        typeof specifications === "string"
+          ? JSON.parse(specifications)
+          : specifications;
+    }
+
+    // Handle Image Upload if new file provided
+    if (req.files?.image) {
+      existingProduct.image = req.files.image[0].path;
+    }
+
+    //Handle Datasheet Upload if new file provided
+    if (req.files?.datasheet) {
+      existingProduct.datasheet = req.files.datasheet[0].path;
+    }
+
+    await existingProduct.save();
+
+    res
+      .status(200)
+      .json({
+        success: true,
+        message: "Product Updated Successfully",
+        product: existingProduct,
+      });
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Product update failed" });
+  }
+};

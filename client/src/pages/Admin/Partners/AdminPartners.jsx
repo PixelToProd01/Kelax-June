@@ -109,7 +109,7 @@ export default function AdminPartners() {
   };
 
   return (
-    <div className="p-4 md:p-2">
+    <div className="min-h-screen max-w-4xl mx-auto p-4 md:p-2">
       <h1 className="text-2xl font-bold mb-6">Partners Management</h1>
 
       {/* ================= DESKTOP TABLE ================= */}

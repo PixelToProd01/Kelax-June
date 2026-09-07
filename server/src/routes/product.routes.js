@@ -10,6 +10,8 @@ import {
   getProductsByCategory,
   deleteProduct,
   getProductBySlug,
+  updateProduct,
+  getProductById,
 } from "../controllers/product.controller.js";
 
 const productRouter = Router();
@@ -24,7 +26,6 @@ productRouter.post(
   authorizeRoles("admin"),
   createProduct,
 );
-
 
 // Get Product By Category For All Users, Without Authenticated are included  --> getAllProducts
 productRouter.get("/get-all-product", getAllProducts);
@@ -41,6 +42,21 @@ productRouter.delete(
   isAdminAuthenticated,
   authorizeRoles("admin"),
   deleteProduct,
+);
+
+// Specific Product Fetch Route
+productRouter.get("/get-product/:id", getProductById)
+
+// Route For Update Product
+productRouter.put(
+  "/update-product/:id",
+  upload.fields([
+    { name: "image", maxCount: 1 },
+    { name: "datasheet", maxCount: 1 },
+  ]),
+  isAdminAuthenticated,
+  authorizeRoles("admin"),
+  updateProduct,
 );
 
 export default productRouter;

@@ -11,6 +11,8 @@ import {
   X,
   Award,
   View,
+  FileUp,
+  ScanEye,
 } from "lucide-react";
 import { useState } from "react";
 
@@ -121,6 +123,26 @@ const AdminSidebar = () => {
           >
             <View size={18} />
             View Warranty
+          </NavLink>
+
+          {/* Upload Drivers */}
+          <NavLink
+            to="/admin/upload-drivers"
+            className={linkClass}
+            onClick={() => setOpen(false)}
+          >
+            <FileUp size={18} />
+            Upload Drivers
+          </NavLink>
+
+          {/* View Drivers */}
+          <NavLink
+            to="/admin/view-drivers"
+            className={linkClass}
+            onClick={() => setOpen(false)}
+          >
+            <ScanEye size={18} />
+            View Drivers
           </NavLink>
 
           {/* Partners */}

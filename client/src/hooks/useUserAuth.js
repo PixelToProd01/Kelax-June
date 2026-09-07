@@ -20,6 +20,10 @@ const useUserAuth = () => {
 
         // optional: localStorage me role sync
         localStorage.setItem("role", result.data.user.role);
+        
+        // if(result.data?.user){
+        //   localStorage.setItem("role", result.data.user.role);
+        // }
       } catch (error) {
         console.log(error);
         dispatch(clearUserData());
