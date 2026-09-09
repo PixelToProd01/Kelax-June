@@ -11,24 +11,30 @@ const formatDate = (date) => {
 export const createWarranty = async (req, res) => {
   try {
     const {
-      customerName,
-      resellerName,
-      customerAddress,
-      productConfiguration,
       serialNumber,
-      productName,
+      modelNumber,
+      customerName,
+      customerEmail,
+      customerContact,
+      customerAddress,
+      customerCompany,
+      resellerName,
+      productConfiguration,
       warrantyType,
       validFrom,
       validTo,
     } = req.body;
 
     if (
-      !customerName ||
-      !resellerName ||
-      !customerAddress ||
-      !productConfiguration ||
       !serialNumber ||
-      !productName ||
+      !modelNumber ||
+      // !customerName ||
+      // !customerEmail ||
+      // !customerContact ||
+      // !customerAddress ||
+      // !customerCompany ||
+      !resellerName ||
+      !productConfiguration ||
       !validFrom ||
       !validTo
     ) {
@@ -59,13 +65,16 @@ export const createWarranty = async (req, res) => {
     }
 
     const warranty = await Warranty.create({
-      customerName,
-      image: imagePath,
-      resellerName,
-      customerAddress,
-      productConfiguration,
       serialNumber: serialNumber.toUpperCase(),
-      productName,
+      modelNumber,
+      customerName,
+      customerEmail,
+      customerContact,
+      customerAddress,
+      customerCompany,
+      resellerName,
+      image: imagePath,
+      productConfiguration,
       warrantyType,
       validFrom,
       validTo,

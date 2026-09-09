@@ -2,9 +2,47 @@ import mongoose from "mongoose";
 
 const warrantySchema = new mongoose.Schema(
   {
-    customerName: {
+    serialNumber: {
       type: String,
       required: true,
+      unique: true,
+      uppercase: true,
+      trim: true,
+    },
+
+    // productName: {
+    //   type: String,
+    //   required: true,
+    // },
+
+    modelNumber: {
+      type: String,
+      required: true,
+    },
+
+    customerName: {
+      type: String,
+      // required: true,
+    },
+
+    customerEmail: {
+      type: String,
+      // required: true,
+    },
+
+    customerContact: {
+      type: String,
+      // required: true,
+    },
+
+    customerAddress: {
+      type: String,
+      // required: true,
+    },
+
+    customerCompany: {
+      type: String,
+      // required: true,
     },
 
     resellerName: {
@@ -17,25 +55,7 @@ const warrantySchema = new mongoose.Schema(
       required: true,
     },
 
-    customerAddress: {
-      type: String,
-      required: true,
-    },
-
     productConfiguration: {
-      type: String,
-      required: true,
-    },
-
-    serialNumber: {
-      type: String,
-      required: true,
-      unique: true,
-      uppercase: true,
-      trim: true,
-    },
-
-    productName: {
       type: String,
       required: true,
     },

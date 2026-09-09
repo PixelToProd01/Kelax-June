@@ -4,12 +4,15 @@ import { serverUrl } from "../../../App";
 
 const AddWarranty = () => {
   const [formData, setFormData] = useState({
-    customerName: "",
-    resellerName: "",
-    customerAddress: "",
-    productConfiguration: "",
     serialNumber: "",
-    productName: "",
+    modelNumber: "",
+    customerName: "",
+    customerEmail: "",
+    customerContact: "",
+    customerAddress: "",
+    customerCompany: "",
+    resellerName: "",
+    productConfiguration: "",
     warrantyType: "NBD",
     validFrom: "",
     validTo: "",
@@ -49,12 +52,15 @@ const AddWarranty = () => {
 
       const submitData = new FormData();
 
-      submitData.append("customerName", formData.customerName);
-      submitData.append("resellerName", formData.resellerName);
-      submitData.append("customerAddress", formData.customerAddress);
-      submitData.append("productConfiguration", formData.productConfiguration);
       submitData.append("serialNumber", formData.serialNumber);
-      submitData.append("productName", formData.productName);
+      submitData.append("modelNumber", formData.modelNumber);
+      submitData.append("customerName", formData.customerName);
+      submitData.append("customerEmail", formData.customerEmail);
+      submitData.append("customerContact", formData.customerContact);
+      submitData.append("customerAddress", formData.customerAddress);
+      submitData.append("customerCompany", formData.customerCompany);
+      submitData.append("resellerName", formData.resellerName);
+      submitData.append("productConfiguration", formData.productConfiguration);
       submitData.append("warrantyType", formData.warrantyType);
       submitData.append("validFrom", formData.validFrom);
       submitData.append("validTo", formData.validTo);
@@ -72,7 +78,7 @@ const AddWarranty = () => {
           },
         },
       );
-
+      
       if (res.data.success) {
         setPopup({
           type: "success",
@@ -80,12 +86,15 @@ const AddWarranty = () => {
         });
 
         setFormData({
-          customerName: "",
-          resellerName: "",
-          customerAddress: "",
-          productConfiguration: "",
           serialNumber: "",
-          productName: "",
+          modelNumber: "",
+          customerName: "",
+          customerEmail: "",
+          customerContact: "",
+          customerAddress: "",
+          customerCompany: "",
+          resellerName: "",
+          productConfiguration: "",
           warrantyType: "NBD",
           validFrom: "",
           validTo: "",
@@ -137,14 +146,14 @@ const AddWarranty = () => {
             className="w-full border rounded-xl p-3"
           />
 
-          <label className="w-full p-2">Model Number</label>
+          <label className="w-full p-2">Model Number *</label>
           <input
             type="text"
-            name="productName"
+            name="modelNumber"
             placeholder="Model Number"
-            value={formData.productName}
+            value={formData.modelNumber}
             onChange={handleChange}
-            // required
+            required
             className="w-full border rounded-xl p-3"
           />
 
@@ -159,14 +168,23 @@ const AddWarranty = () => {
             className="w-full border rounded-xl p-3"
           />
 
-          {/* Customer  ---->  Email, Contact Number, Address, Company Name */}
-
-          <label className="w-full p-2">Reseller Name</label>
+          <label className="w-full p-2">Customer Email</label>
           <input
             type="text"
-            name="resellerName"
-            placeholder="Reseller Name"
-            value={formData.resellerName}
+            name="customerEmail"
+            placeholder="Customer Email"
+            value={formData.customerEmail}
+            onChange={handleChange}
+            // required
+            className="w-full border rounded-xl p-3"
+          />
+
+          <label className="w-full p-2">Customer Contact</label>
+          <input
+            type="text"
+            name="customerContact"
+            placeholder="Customer Contact"
+            value={formData.customerContact}
             onChange={handleChange}
             // required
             className="w-full border rounded-xl p-3"
@@ -183,6 +201,28 @@ const AddWarranty = () => {
             className="w-full border rounded-xl p-3"
           />
 
+          <label className="w-full p-2">Customer Company</label>
+          <input
+            type="text"
+            name="customerCompany"
+            placeholder="Customer Company"
+            value={formData.customerCompany}
+            onChange={handleChange}
+            // required
+            className="w-full border rounded-xl p-3"
+          />
+
+          <label className="w-full p-2">Reseller Name *</label>
+          <input
+            type="text"
+            name="resellerName"
+            placeholder="Reseller Name"
+            value={formData.resellerName}
+            onChange={handleChange}
+            required
+            className="w-full border rounded-xl p-3"
+          />
+
           <label className="w-full p-2">Product Configuration *</label>
           <input
             type="text"
@@ -194,7 +234,7 @@ const AddWarranty = () => {
             className="w-full border rounded-xl p-3"
           />
 
-          <label className="w-full p-2">Warranty Type</label>
+          <label className="w-full p-2">Warranty Type *</label>
           <select
             name="warrantyType"
             value={formData.warrantyType}
@@ -208,7 +248,7 @@ const AddWarranty = () => {
           {/* Warranty Image Add */}
           <div className="w-full">
             <label className="block mb-2 font-medium">
-              Upload Product Image
+              Upload Product Image *
             </label>
             <label className="w-full border rounded-xl p-3 flex items-center justify-between cursor-pointer bg-white">
               <span className="text-gray-500">
@@ -237,6 +277,7 @@ const AddWarranty = () => {
           )}
 
           <div className="grid grid-cols-2 gap-4">
+            {/* <label>Start From</label> */}
             <input
               type="date"
               name="validFrom"

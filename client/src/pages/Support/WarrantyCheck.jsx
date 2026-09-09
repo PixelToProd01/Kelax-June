@@ -148,13 +148,22 @@ const WarrantyCheck = () => {
                     {/* CENTER - PRODUCT IMAGE */}
 
                     <div className="flex justify-center">
-                      <div className="bg-white/10 backdrop-blur-md p-4 rounded-3xl border border-white/20 shadow-lg">
+                      <div className="bg-white/10 backdrop-blur-md p-3 rounded-3xl w-full aspect-[4/3] overflow-hidden flex items-center justify-center border border-white/20 shadow-lg">
                         <img
                           src={`${serverUrl}${data.image}`}
-                          alt={data.productName}
-                          className="w-full max-w-[280px] h-[220px] object-cover rounded-2xl"
+                          alt={data.modelNumber}
+                          // className="w-full max-w-sm h-[200px] rounded-2xl"
+                          className="w-full h-full object-contain transition duration-300 hover:scale-105 rounded-2xl"
                         />
                       </div>
+
+                      {/* <div className="w-full aspect-[4/3] overflow-hidden flex items-center justify-center">
+                        <img
+                          src={`${serverUrl}${product.image}`}
+                          alt={product.name}
+                          className="w-full h-full object-contain transition duration-300 hover:scale-105"
+                        />
+                      </div> */}
                     </div>
 
                     {/* RIGHT SIDE - PRODUCT INFO */}
@@ -165,7 +174,7 @@ const WarrantyCheck = () => {
                       </p>
 
                       <h3 className="text-2xl font-bold mb-5">
-                        {data.productName}
+                        {data.modelNumber}
                       </h3>
 
                       <div className="space-y-4">
