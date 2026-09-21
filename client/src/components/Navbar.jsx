@@ -294,7 +294,7 @@ const Navbar = () => {
               className="transition group-hover:text-[#006db8]"
             />
             <p className="font-medium transition group-hover:text-[#006db8]">
-              Warranty Call Log
+              Technical Support
             </p>
           </div>
 
