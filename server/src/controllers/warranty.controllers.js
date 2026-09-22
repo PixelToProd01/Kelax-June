@@ -1,3 +1,4 @@
+import Product from "../models/product.model.js";
 import Warranty from "../models/warranty.model.js";
 
 // helper function (date format)
@@ -11,13 +12,14 @@ const formatDate = (date) => {
 export const createWarranty = async (req, res) => {
   try {
     const {
+      category,
       serialNumber,
       modelNumber,
       customerName,
       customerEmail,
       customerContact,
       customerAddress,
-      customerCompany,
+      // customerCompany,
       resellerName,
       productConfiguration,
       warrantyType,
@@ -26,6 +28,7 @@ export const createWarranty = async (req, res) => {
     } = req.body;
 
     if (
+      !category ||
       !serialNumber ||
       !modelNumber ||
       // !customerName ||
@@ -44,13 +47,22 @@ export const createWarranty = async (req, res) => {
       });
     }
 
-    if (!req.files?.image) {
-      return res
-        .status(400)
-        .json({ message: "Image is Required for Warranty" });
+    const productExist = await Product.findById(modelNumber);
+
+    if (!productExist) {
+      return res.status(404).json({
+        success: false,
+        message: "Product not found",
+      });
     }
 
-    const imagePath = "/" + req.files.image[0].path.replace(/\\/g, "/");
+    // if (!req.files?.image) {
+    //   return res
+    //     .status(400)
+    //     .json({ message: "Image is Required for Warranty" });
+    // }
+
+    // const imagePath = "/" + req.files.image[0].path.replace(/\\/g, "/");
 
     // ✅ CHECK DUPLICATE MANUALLY (extra safety)
     const existing = await Warranty.findOne({
@@ -65,15 +77,16 @@ export const createWarranty = async (req, res) => {
     }
 
     const warranty = await Warranty.create({
+      category,
       serialNumber: serialNumber.toUpperCase(),
       modelNumber,
       customerName,
       customerEmail,
       customerContact,
       customerAddress,
-      customerCompany,
+      // customerCompany,
       resellerName,
-      image: imagePath,
+      // image: imagePath,
       productConfiguration,
       warrantyType,
       validFrom,
@@ -114,7 +127,7 @@ export const getWarrantyBySerial = async (req, res) => {
 
     const warranty = await Warranty.findOne({
       serialNumber: serial.toUpperCase(),
-    });
+    }).populate("modelNumber", "name category");
 
     if (!warranty) {
       return res.status(404).json({
@@ -143,6 +156,7 @@ export const getAllWarranties = async (req, res) => {
     const skip = (page - 1) * limit;
 
     const warranties = await Warranty.find()
+      .populate("modelNumber", "name category")
       .sort({ createdAt: -1 })
       .skip(skip)
       .limit(limit);

@@ -2,6 +2,12 @@ import mongoose from "mongoose";
 
 const warrantySchema = new mongoose.Schema(
   {
+    category: {
+      type: String,
+      enum: ["server", "workstation"],
+      required: true,
+    },
+
     serialNumber: {
       type: String,
       required: true,
@@ -15,8 +21,15 @@ const warrantySchema = new mongoose.Schema(
     //   required: true,
     // },
 
+    // modelNumber: {
+    //   type: String,
+    //   required: true,
+    // },
+
+    // Product Reference
     modelNumber: {
-      type: String,
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Product",
       required: true,
     },
 
@@ -50,10 +63,10 @@ const warrantySchema = new mongoose.Schema(
       required: true,
     },
 
-    image: {
-      type: String,
-      required: true,
-    },
+    // image: {
+    //   type: String,
+    //   required: true,
+    // },
 
     productConfiguration: {
       type: String,

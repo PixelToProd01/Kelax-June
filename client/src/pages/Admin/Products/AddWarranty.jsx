@@ -1,16 +1,19 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { serverUrl } from "../../../App";
+import toast from "react-hot-toast";
 
 const AddWarranty = () => {
+  const [products, setProducts] = useState([]);
   const [formData, setFormData] = useState({
+    category: "server",
     serialNumber: "",
     modelNumber: "",
     customerName: "",
     customerEmail: "",
     customerContact: "",
     customerAddress: "",
-    customerCompany: "",
+    // customerCompany: "",
     resellerName: "",
     productConfiguration: "",
     warrantyType: "NBD",
@@ -18,24 +21,46 @@ const AddWarranty = () => {
     validTo: "",
   });
 
+  // const [category, setCategory] = useState("server");
+
   const [popup, setPopup] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  const [image, setImage] = useState(null);
-  const [imagePreview, setImagePreview] = useState(null);
+  // const [image, setImage] = useState(null);
+  // const [imagePreview, setImagePreview] = useState(null);
 
   // Image Preview
-  const handleImageChange = (file) => {
-    setImage(file);
+  // const handleImageChange = (file) => {
+  //   setImage(file);
 
-    const reader = new FileReader();
+  //   const reader = new FileReader();
 
-    reader.onloadend = () => {
-      setImagePreview(reader.result);
-    };
+  //   reader.onloadend = () => {
+  //     setImagePreview(reader.result);
+  //   };
 
-    reader.readAsDataURL(file);
+  //   reader.readAsDataURL(file);
+  // };
+
+  /* ==============================
+      FETCH PRODUCTS
+  ============================== */
+
+  const fetchProducts = async () => {
+    try {
+      const res = await axios.get(`${serverUrl}/api/product/get-all-product`, {
+        withCredentials: true,
+      });
+
+      setProducts(res.data.products || []);
+    } catch (error) {
+      toast.error("Unable to load products");
+    }
   };
+
+  useEffect(() => {
+    fetchProducts();
+  }, []);
 
   const handleChange = (e) => {
     setFormData({
@@ -52,13 +77,14 @@ const AddWarranty = () => {
 
       const submitData = new FormData();
 
+      submitData.append("category", formData.category);
       submitData.append("serialNumber", formData.serialNumber);
       submitData.append("modelNumber", formData.modelNumber);
       submitData.append("customerName", formData.customerName);
       submitData.append("customerEmail", formData.customerEmail);
       submitData.append("customerContact", formData.customerContact);
       submitData.append("customerAddress", formData.customerAddress);
-      submitData.append("customerCompany", formData.customerCompany);
+      // submitData.append("customerCompany", formData.customerCompany);
       submitData.append("resellerName", formData.resellerName);
       submitData.append("productConfiguration", formData.productConfiguration);
       submitData.append("warrantyType", formData.warrantyType);
@@ -66,7 +92,7 @@ const AddWarranty = () => {
       submitData.append("validTo", formData.validTo);
 
       // Image
-      submitData.append("image", image);
+      // submitData.append("image", image);
 
       const res = await axios.post(
         `${serverUrl}/api/warranty/create-warranty`,
@@ -78,7 +104,7 @@ const AddWarranty = () => {
           },
         },
       );
-      
+
       if (res.data.success) {
         setPopup({
           type: "success",
@@ -86,13 +112,14 @@ const AddWarranty = () => {
         });
 
         setFormData({
+          category: "server",
           serialNumber: "",
           modelNumber: "",
           customerName: "",
           customerEmail: "",
           customerContact: "",
           customerAddress: "",
-          customerCompany: "",
+          // customerCompany: "",
           resellerName: "",
           productConfiguration: "",
           warrantyType: "NBD",
@@ -100,8 +127,8 @@ const AddWarranty = () => {
           validTo: "",
         });
 
-        setImage(null);
-        setImagePreview(null);
+        // setImage(null);
+        // setImagePreview(null);
       }
     } catch (err) {
       setPopup({
@@ -135,6 +162,60 @@ const AddWarranty = () => {
         )}
 
         <form onSubmit={handleSubmit} className="space-y-5">
+          {/* Category */}
+          <label className="text- font-semibold">Product Type *</label>
+          <select
+            name="category"
+            value={formData.category}
+            onChange={handleChange}
+            className="w-full border rounded-xl p-3"
+          >
+            <option value="server">Server</option>
+            <option value="workstation">Workstation</option>
+          </select>
+
+          {/* <label className="w-full p-2">Serial Number *</label>
+          <input
+            type="text"
+            name="serialNumber"
+            placeholder="Serial Number"
+            value={formData.serialNumber}
+            onChange={handleChange}
+            required
+            className="w-full border rounded-xl p-3"
+          /> */}
+
+          {/* <label className="w-full p-2">Model Number *</label>
+          <input
+            type="text"
+            name="modelNumber"
+            placeholder="Model Number"
+            value={formData.modelNumber}
+            onChange={handleChange}
+            required
+            className="w-full border rounded-xl p-3"
+          /> */}
+
+          <div>
+            <label className="block mb-2 font-semibold">Model Number *</label>
+
+            <select
+              name="modelNumber"
+              value={formData.modelNumber}
+              onChange={handleChange}
+              required
+              className="w-full border rounded-xl p-3"
+            >
+              <option value="">Select Product</option>
+
+              {products.map((item) => (
+                <option key={item._id} value={item._id}>
+                  {item.name}
+                </option>
+              ))}
+            </select>
+          </div>
+
           <label className="w-full p-2">Serial Number *</label>
           <input
             type="text"
@@ -146,62 +227,53 @@ const AddWarranty = () => {
             className="w-full border rounded-xl p-3"
           />
 
-          <label className="w-full p-2">Model Number *</label>
+          <label className="w-full p-2">End Customer Name *</label>
           <input
             type="text"
-            name="modelNumber"
-            placeholder="Model Number"
-            value={formData.modelNumber}
+            name="customerName"
+            placeholder="ABC Technologies Pvt. Ltd."
+            value={formData.customerName}
             onChange={handleChange}
             required
             className="w-full border rounded-xl p-3"
           />
 
-          <label className="w-full p-2">Customer Name</label>
-          <input
-            type="text"
-            name="customerName"
-            placeholder="Customer Name"
-            value={formData.customerName}
-            onChange={handleChange}
-            // required
-            className="w-full border rounded-xl p-3"
-          />
-
-          <label className="w-full p-2">Customer Email</label>
+          <label className="w-full p-2">Contact Person Email Address</label>
           <input
             type="text"
             name="customerEmail"
-            placeholder="Customer Email"
+            placeholder="abc@company.com"
             value={formData.customerEmail}
             onChange={handleChange}
             // required
             className="w-full border rounded-xl p-3"
           />
 
-          <label className="w-full p-2">Customer Contact</label>
+          <label className="w-full p-2">Contact Person Phone Number</label>
           <input
             type="text"
             name="customerContact"
-            placeholder="Customer Contact"
+            placeholder="+91 9876543210"
             value={formData.customerContact}
             onChange={handleChange}
             // required
             className="w-full border rounded-xl p-3"
           />
 
-          <label className="w-full p-2">Customer Address</label>
+          <label className="w-full p-2">
+            Customer Registered Office Address
+          </label>
           <input
             type="text"
             name="customerAddress"
-            placeholder="Customer Address"
+            placeholder="xyz sector 52 Noida Uttar Pradesh"
             value={formData.customerAddress}
             onChange={handleChange}
             // required
             className="w-full border rounded-xl p-3"
           />
 
-          <label className="w-full p-2">Customer Company</label>
+          {/* <label className="w-full p-2">Customer Company</label>
           <input
             type="text"
             name="customerCompany"
@@ -210,7 +282,7 @@ const AddWarranty = () => {
             onChange={handleChange}
             // required
             className="w-full border rounded-xl p-3"
-          />
+          /> */}
 
           <label className="w-full p-2">Reseller Name *</label>
           <input
@@ -246,7 +318,7 @@ const AddWarranty = () => {
           </select>
 
           {/* Warranty Image Add */}
-          <div className="w-full">
+          {/* <div className="w-full">
             <label className="block mb-2 font-medium">
               Upload Product Image *
             </label>
@@ -266,27 +338,28 @@ const AddWarranty = () => {
                 className="hidden"
               />
             </label>
-          </div>
+          </div> */}
 
-          {imagePreview && (
+          {/* {imagePreview && (
             <img
               src={imagePreview}
               alt="preview"
               className="h-40 mt-3 rounded-lg"
             />
-          )}
+          )} */}
 
-          <div className="grid grid-cols-2 gap-4">
-            {/* <label>Start From</label> */}
+          <div className="grid">
+            <label>Warranty Start Date *</label>
             <input
               type="date"
               name="validFrom"
               value={formData.validFrom}
               onChange={handleChange}
               required
-              className="border rounded-xl p-3"
+              className="border rounded-xl p-3  mb-4"
             />
 
+            <label>Warranty End Date *</label>
             <input
               type="date"
               name="validTo"

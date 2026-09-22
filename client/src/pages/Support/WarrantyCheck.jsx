@@ -106,7 +106,8 @@ const WarrantyCheck = () => {
               <div className="mt-10">
                 {/* STATUS CARD */}
                 <div className="bg-gradient-to-r from-indigo-600 via-blue-600 to-cyan-600 rounded-3xl p-8 text-white shadow-2xl">
-                  <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-center">
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+                  {/* <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-center"> */}
                     {/* LEFT SIDE - WARRANTY STATUS */}
 
                     <div>
@@ -147,34 +148,35 @@ const WarrantyCheck = () => {
 
                     {/* CENTER - PRODUCT IMAGE */}
 
-                    <div className="flex justify-center">
+                    {/* <div className="flex justify-center">
                       <div className="bg-white/10 backdrop-blur-md p-3 rounded-3xl w-full aspect-[4/3] overflow-hidden flex items-center justify-center border border-white/20 shadow-lg">
                         <img
                           src={`${serverUrl}${data.image}`}
                           alt={data.modelNumber}
                           // className="w-full max-w-sm h-[200px] rounded-2xl"
-                          className="w-full h-full object-contain transition duration-300 hover:scale-105 rounded-2xl"
+                          className="w-full h-full object-contain transition duration-300 hover:scale-105"
                         />
                       </div>
 
-                      {/* <div className="w-full aspect-[4/3] overflow-hidden flex items-center justify-center">
+                      <div className="w-full aspect-[4/3] overflow-hidden flex items-center justify-center">
                         <img
                           src={`${serverUrl}${product.image}`}
                           alt={product.name}
                           className="w-full h-full object-contain transition duration-300 hover:scale-105"
                         />
-                      </div> */}
-                    </div>
+                      </div>
+                    </div> */}
 
                     {/* RIGHT SIDE - PRODUCT INFO */}
 
                     <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20">
+                    {/* <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20"> */}
                       <p className="text-sm text-indigo-100 mb-1">
-                        Product Name
+                        Model Number
                       </p>
 
                       <h3 className="text-2xl font-bold mb-5">
-                        {data.modelNumber}
+                        {data.modelNumber.name}
                       </h3>
 
                       <div className="space-y-4">

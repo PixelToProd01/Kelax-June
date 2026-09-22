@@ -5,7 +5,9 @@ import { serverUrl } from "../../App";
 import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer";
 import serverPageBg from "../../assets/products/Server_Page_Hero.png"
+import serverPageBgMobile from "../../assets/products/Server_Page_Hero_Mobile.png"
 import workstationPageBg from "../../assets/products/Workstation_Page_Hero.png"
+import workstationPageBgMobile from "../../assets/products/Workstation_Page_Hero_Mobile.png"
 
 import {
   FiShield,
@@ -32,9 +34,24 @@ const getSpec = (product, keyName) => {
   return match?.value;
 };
 
+// ===== CHANGE: per-category hero image config. Each category now has a
+// separate mobile and desktop image + its own object-position, since the
+// mobile crop is a different image (not just a repositioned desktop one).
+const HERO_CONFIG = {
+  workstation: {
+    desktop: { image: workstationPageBg, position: "md:object-[center_-110%]" },
+    mobile: { image: workstationPageBgMobile, position: "object-[76%_20%]" },
+  },
+
+  server: {
+    desktop: { image: serverPageBg, position: "md:object-top" },
+    mobile: { image: serverPageBgMobile, position: "object-[82%_0%]" },
+  },
+};
+
 const ProductList = () => {
   const { category } = useParams();
-  const heroBg = category === "workstation" ? workstationPageBg : serverPageBg;
+  const hero = HERO_CONFIG[category] || HERO_CONFIG.server;
 
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -74,14 +91,24 @@ const ProductList = () => {
           swapped object-position from vertically-centered to top-anchored
           (object-right-top / object-top) so any cropping that does happen
           comes off the BOTTOM of the image, not the top. ===== */}
-      <section className="relative pt-20 pb-8 overflow-hidden bg-gradient-to-br from-[#eef2fb] via-[#eef2fb] to-[#dfe7fb] min-h-[420px] md:min-h-[480px]">
-        <img
-          src={heroBg}
-          alt=""
-          className="absolute inset-0 w-full h-full object-cover object-right-top md:object-top"
-        />
-        {/* <div className="absolute inset-0 bg-white md:bg-black/25" /> */}
-        <div className="absolute inset-0 bg-black/30 md:bg-white/15" />
+                  <section className="relative pt-20 pb-8 bg-gradient-to-br from-[#eef2fb] via-[#eef2fb] to-[#dfe7fb] min-h-[440px] sm:min-h-[460px] md:min-h-[480px]">
+        <div className="absolute inset-0 overflow-hidden">
+          {/* mobile image */}
+          <img
+            src={hero.mobile.image}
+            alt=""
+            className={`absolute inset-0 w-full h-full object-cover ${hero.mobile.position} md:hidden`}
+          />
+
+          {/* desktop image */}
+          <img
+            src={hero.desktop.image}
+            alt=""
+            className={`absolute inset-0 w-full h-full object-cover ${hero.desktop.position} hidden md:block`}
+          />
+          <div className="absolute inset-0 bg-black/30 md:bg-white/15" />
+        </div>  
+
         <div className="relative max-w-6xl mx-auto px-6 grid md:grid-cols-5 gap-10 items-center">
           <div className="md:col-span-3">
             {/* <p className="text-sm font-semibold tracking-wide text-[#3050c8] uppercase mb-3">
@@ -95,16 +122,16 @@ const ProductList = () => {
               is built to handle today's workloads and tomorrow's challenges.
             </p>
 
-            <div className="flex flex-wrap gap-8">
+                        <div className="flex flex-wrap gap-x-8 gap-y-4">
               {FEATURES.map(({ icon: Icon, title, subtitle }) => (
                 <div key={title} className="flex items-center gap-3">
                   <div className="h-11 w-11 rounded-full bg-white/70 flex items-center justify-center text-[#3050c8] shrink-0">
                     <Icon className="text-lg" />
                   </div>
                   <p className="text-sm font-semibold text-white md:text-gray-800 leading-snug">
-                      {title}
-                      <br />
-                      {subtitle}
+                    {title}
+                    <br />
+                    {subtitle}
                   </p>
                 </div>
               ))}

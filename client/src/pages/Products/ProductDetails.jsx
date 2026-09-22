@@ -18,6 +18,7 @@ import {
   FiMail,
   FiServer,
   FiZap,
+  FiHardDrive,
 } from "react-icons/fi";
 import { PiLeaf } from "react-icons/pi";
 
@@ -84,12 +85,14 @@ const ProductDetails = () => {
   const memorySlots = getSpec(product, "Memory Slots");
   const processor = getSpec(product, "Processor");
   const warranty = getSpec(product, "Warranty");
+const memoryType = getSpec(product, "Memory Type");
+const supportedDrives = getSpec(product, "Supported Drives");
 
   // ===== CHANGE: teaser shows only the first paragraph/line of the
   // product's introduction (e.g. "Introducing Kelax VedaVault Server
   // Series: Empowering Server-Centric Verticals and Segments") instead of
   // a fixed character slice, so every product shows just that opening
-  // line in the hero — the rest of the introduction still appears in full
+  // line in the hero â€” the rest of the introduction still appears in full
   // further down the page.
   const firstIntroBlockMatch = (product.introduction || "").match(
     /<(p|h[1-6])[^>]*>([\s\S]*?)<\/\1>/i
@@ -107,7 +110,7 @@ const ProductDetails = () => {
 
       {/* ===== CHANGE: PRODUCT TOP SECTION replaced with a hero band
           (gradient bg, dot-grid accent, tagline, feature chips) matching
-          the mockup — same product data as before, new layout.
+          the mockup â€” same product data as before, new layout.
           ===== CHANGE: sizing scaled down ~15-20% across this section
           (headings, spacing, paddings) so 100% zoom shows the same
           amount of content as before at 80% zoom, instead of overflowing
@@ -133,7 +136,7 @@ const ProductDetails = () => {
               <img
                 src={`${serverUrl}${product.image}`}
                 alt={product.name}
-                className="max-h-[260px] object-contain drop-shadow-xl"
+                className="max-h-[260px] object-contain"
               />
             </div>
 
@@ -163,27 +166,7 @@ const ProductDetails = () => {
                   </div>
                 )}
 
-                {/* CHANGE: 2 extra hardcoded highlights so this panel
-                    reads as a fuller 2x2 grid instead of just 2 items */}
-                <div className="flex items-center gap-3">
-                  <div className="h-9 w-9 rounded-full bg-blue-50 flex items-center justify-center text-[#006db8] shrink-0">
-                    <FiServer className="text-base" />
-                  </div>
-                  <div>
-                    <p className="font-semibold text-gray-900 text-sm">Form Factor</p>
-                    <p className="text-gray-500 text-sm">2U Rack Server</p>
-                  </div>
-                </div>
-
-                <div className="flex items-center gap-3">
-                  <div className="h-9 w-9 rounded-full bg-blue-50 flex items-center justify-center text-[#006db8] shrink-0">
-                    <FiZap className="text-base" />
-                  </div>
-                  <div>
-                    <p className="font-semibold text-gray-900 text-sm">Power Supply</p>
-                    <p className="text-gray-500 text-sm">Redundant, Hot-Swappable</p>
-                  </div>
-                </div>
+               
               </div>
             )}
           </div>
@@ -199,7 +182,7 @@ const ProductDetails = () => {
               <span className="text-[#006db8]">Built for Demanding Workloads.</span>
             </p>
 
-            {/* CHANGE: intro teaser — just the first paragraph/heading
+            {/* CHANGE: intro teaser â€” just the first paragraph/heading
                 line of the product's introduction, no truncation */}
             {introTeaser && (
               <p className="text-gray-600 text-sm leading-relaxed mb-6 max-w-xl">
@@ -221,7 +204,7 @@ const ProductDetails = () => {
             {/* CHANGE: icon + title now sit on one line (same height for
                 all 4 items), so every title starts at the same level and
                 every description below it starts at the same level too */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-x-8 gap-y-5">
+                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-x-8 gap-y-5">
               <div>
                 <div className="flex items-center gap-2 mb-1.5">
                   <FiActivity className="text-[#006db8] text-xl shrink-0" />
@@ -236,6 +219,30 @@ const ProductDetails = () => {
 
               <div>
                 <div className="flex items-center gap-2 mb-1.5">
+                  <FiLayers className="text-[#006db8] text-xl shrink-0" />
+                  <p className="font-semibold text-gray-900 text-sm">Memory Type</p>
+                </div>
+                <p className="text-gray-500 text-xs leading-snug">
+                  {memoryType
+                    ? memoryType
+                    : "High-speed memory for demanding workloads."}
+                </p>
+              </div>
+
+              <div>
+                <div className="flex items-center gap-2 mb-1.5">
+                  <FiHardDrive className="text-[#006db8] text-xl shrink-0" />
+                  <p className="font-semibold text-gray-900 text-sm">Supported Drives</p>
+                </div>
+                <p className="text-gray-500 text-xs leading-snug">
+                  {supportedDrives
+                    ? supportedDrives
+                    : "Flexible storage configuration for growing needs."}
+                </p>
+              </div>
+
+              <div>
+                <div className="flex items-center gap-2 mb-1.5">
                   <FiShield className="text-[#006db8] text-xl shrink-0" />
                   <p className="font-semibold text-gray-900 text-sm">Enterprise Grade</p>
                 </div>
@@ -245,34 +252,14 @@ const ProductDetails = () => {
                     : "Built for 24x7 reliability and data integrity."}
                 </p>
               </div>
-
-              <div>
-                <div className="flex items-center gap-2 mb-1.5">
-                  <FiLayers className="text-[#006db8] text-xl shrink-0" />
-                  <p className="font-semibold text-gray-900 text-sm">Scalable Storage</p>
-                </div>
-                <p className="text-gray-500 text-xs leading-snug">
-                  Flexible configuration for growing needs.
-                </p>
-              </div>
-
-              <div>
-                <div className="flex items-center gap-2 mb-1.5">
-                  <FiSettings className="text-[#006db8] text-xl shrink-0" />
-                  <p className="font-semibold text-gray-900 text-sm">Easy Management</p>
-                </div>
-                <p className="text-gray-500 text-xs leading-snug">
-                  Remote management and monitoring.
-                </p>
-              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ===== CHANGE: new dark trust strip section (not in original file) —
+      {/* ===== CHANGE: new dark trust strip section (not in original file) â€”
           padding scaled down to match the more compact hero ===== */}
-      <section className="bg-gradient-to-r from-[#071233] to-[#0b2352] px-6 py-8">
+                  <section className="bg-gradient-to-r from-[#3b6fc9] to-[#2f5aa8] px-6 py-8">
         <div className="max-w-6xl mx-auto grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
           <div className="flex gap-3">
             <div className="h-9 w-9 rounded-full border border-white/30 flex items-center justify-center text-white shrink-0">
@@ -324,7 +311,7 @@ const ProductDetails = () => {
         </div>
       </section>
 
-      {/* INTRODUCTION — padding/spacing scaled down slightly to stay
+      {/* INTRODUCTION â€” padding/spacing scaled down slightly to stay
           consistent with the more compact hero and trust strip above */}
       <section className="bg-[#f9fafb] px-6 py-12">
         <div className="max-w-7xl mx-auto">
@@ -383,13 +370,7 @@ const ProductDetails = () => {
             </div>
 
             <div className="flex flex-col sm:flex-row gap-3 shrink-0">
-              <a
-                href="/contact-us"
-                className="flex items-center justify-center gap-2 bg-white border border-[#006db8] text-[#006db8] px-4 py-2 rounded-lg font-medium text-sm hover:bg-blue-50 transition whitespace-nowrap"
-              >
-                <FiMail />
-                Contact Sales
-              </a>
+              
 
               <a
                 href="/contact-us"

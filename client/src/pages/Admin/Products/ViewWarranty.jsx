@@ -149,13 +149,18 @@ const ViewWarranty = () => {
           "
                     >
                       <p className="font-semibold">
+                        Product Type:
+                        <span className="ml-2">{p.category}</span>
+                      </p>
+
+                      <p className="font-semibold">
                         Serial Number:
                         <span className="ml-2">{p.serialNumber}</span>
                       </p>
 
                       <p className="mt-2 text-gray-600">
                         Model Number:
-                        {p.modelNumber || 'NA'}
+                        {p.modelNumber.name || "NA"}
                       </p>
 
                       <p className="mt-2 text-gray-600">
@@ -197,28 +202,28 @@ const ViewWarranty = () => {
                     <td className=" p-4 space-y-1 border-r border-gray-500">
                       <p>
                         <b>Customer Name: </b>
-                        {p.customerName || 'NA'}
+                        {p.customerName || "NA"}
                       </p>
-                      
+
                       <p>
                         <b>Customer Email: </b>
-                        {p.customerEmail || 'NA'}
+                        {p.customerEmail || "NA"}
                       </p>
 
                       <p>
                         <b>Customer Contact: </b>
-                        {p.customerContact || 'NA'}
+                        {p.customerContact || "NA"}
                       </p>
 
                       <p className="mt-2">
                         <b>Customer Address: </b>
-                        {p.customerAddress || 'NA'}
+                        {p.customerAddress || "NA"}
                       </p>
 
-                      <p className="mt-2">
+                      {/* <p className="mt-2">
                         <b>Customer Company: </b>
-                        {p.customerCompany || 'NA'}
-                      </p>
+                        {p.customerCompany || "NA"}
+                      </p> */}
 
                       <p className="mt-2">
                         <b>Reseller: </b>
@@ -298,7 +303,9 @@ p-4
               >
                 <div className="flex justify-between">
                   <div>
-                    <h2 className="font-bold">{item.modelNumber}</h2>
+                    <h2 className="font-bold">
+                      {item.modelNumber?.name || "NA"}
+                    </h2>
 
                     <p className="text-sm text-gray-500">{item.serialNumber}</p>
                   </div>

@@ -124,7 +124,7 @@ const WarrantyCallLog = () => {
               <ul className="mt-8 space-y-3 text-gray-700">
                 <li>✓ Business Hour Support</li>
                 <li>✓ Expert Assistance</li>
-                <li>✓ Next Business Day Resolution</li>
+                <li>✓ Next Business Day Respond</li>
                 <li>✓ Cost Effective Support</li>
                 <li>✓ Dedicated Support Team</li>
               </ul>
