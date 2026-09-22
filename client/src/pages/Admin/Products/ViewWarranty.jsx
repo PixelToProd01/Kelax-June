@@ -160,7 +160,7 @@ const ViewWarranty = () => {
 
                       <p className="mt-2 text-gray-600">
                         Model Number:
-                        {p.modelNumber.name || "NA"}
+                        {p.modelNumber?.name || "NA"}
                       </p>
 
                       <p className="mt-2 text-gray-600">
