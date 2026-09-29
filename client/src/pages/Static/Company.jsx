@@ -199,19 +199,27 @@ const Company = () => {
         <section className="max-w-7xl mx-auto px-6 py-20">
           <div className="text-center mb-14">
             <h2 className="text-4xl font-bold text-[#003c66]">Our Journey</h2>
+
+            <p className="text-gray-600 mt-4 max-w-2xl mx-auto leading-relaxed">
+              Our journey is driven by innovation, customer trust, technical
+              expertise, and a continuous commitment to delivering reliable
+              solutions.
+            </p>
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             {milestones.map((item, index) => (
               <div
                 key={index}
-                className="bg-white rounded-3xl shadow-lg p-8 border-t-4 border-[#006db8]"
+                className="bg-white rounded-3xl shadow-lg p-8 border-t-4 border-[#006db8] hover:shadow-xl transition-shadow duration-300"
               >
-                <span className="text-[#006db8] text-3xl font-bold">
-                  {item.year}
-                </span>
+                <div className="w-12 h-12 rounded-full bg-[#006db8]/10 flex items-center justify-center mb-6">
+                  <span className="text-[#006db8] text-xl font-bold">
+                    {index + 1}
+                  </span>
+                </div>
 
-                <h3 className="text-xl font-bold text-gray-800 mt-4">
+                <h3 className="text-xl font-bold text-gray-800">
                   {item.title}
                 </h3>
 
