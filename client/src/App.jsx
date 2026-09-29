@@ -58,15 +58,20 @@ import AddWarranty from "./pages/Admin/Products/AddWarranty.jsx";
 import ViewWarranty from "./pages/Admin/Products/ViewWarranty.jsx";
 import WarrantyCallLog from "./pages/Support/WarrantyCallLog.jsx";
 import Company from "./pages/Static/Company.jsx";
-import Resources from "./pages/Static/Resources.jsx";
+import Resources from "./pages/Static/Resources.jsx"; //-------------- CO
 
 // NEW --- After Deployment
 import UploadDrivers from "./pages/Admin/Products/UploadDrivers.jsx";
 import DownloadDrivers from "./pages/Support/DownloadDrivers.jsx";
 import ViewDrivers from "./pages/Admin/Products/ViewDrivers.jsx";
+// import CustomerSuccess from "./pages/Resources/CustomerSuccess.jsx"; ------------1s
+// import Blogs from "./pages/Resources/Blogs.jsx"; ---------------1s
 // import AdminProfile from "./layouts/Admin/Profile/AdminProfile.jsx";
 
-// export const serverUrl = "http://localhost:8000";  // Work on Laptop only
+// Import AnalyticsTracker for Google Analytics
+import AnalyticsTracker from "./components/AnalyticsTracker.jsx";
+
+// export const serverUrl = "http://localhost:8000"; // Work on Laptop only
 
 export const serverUrl = "";   // work for kelax use only When Code Is Deploy On Server Only
 
@@ -84,13 +89,17 @@ const App = () => {
   const { adminData } = useSelector((state) => state.admin);
   const { userData } = useSelector((state) => state.user);
 
-//   useEffect(() => {
-//   console.log("UserData updated in app.jsx:", userData);
-// }, [userData]);
+  //   useEffect(() => {
+  //   console.log("UserData updated in app.jsx:", userData);
+  // }, [userData]);
 
   return (
     <>
       <ScrollToTop />
+
+      {/* Add AnalyticsTracker For Track google Analystics */}
+      <AnalyticsTracker />
+
       {/* <Navbar /> */}
       <Routes>
         {/* Public Routes */}
@@ -195,15 +204,18 @@ const App = () => {
         <Route path="partners/technology" element={<TechnologyPartners />} />
         <Route path="partners/channel" element={<ChannelPartners />} />
         {/* Private Route */}
-
         {/* Warranty Call Log Page */}
         <Route path="support/warranty-call-log" element={<WarrantyCallLog />} />
-
         {/* Warranty Check */}
         <Route path="support/warranty-check" element={<WarrantyCheck />} />
-
         {/* Download Drivers */}
         <Route path="support/downloads" element={<DownloadDrivers />} />
+        {/* Resources Page --> 1)Customer Success, 2)Blogs */}
+        {/* <Route
+          path="resources/customer-success"
+          element={<CustomerSuccess />}
+        />
+        <Route path="resources/blogs" element={<Blogs />} /> */}
         {/* <Route path="/products" element={<Products />} />
         <Route path="/products/servers" element={<Servers />} />
         <Route path="/products/workstation" element={<Workstation />} />
@@ -224,18 +236,17 @@ const App = () => {
             <Route path="dashboard" element={<AdminDashboard />} />
 
             <Route path="profile" element={<AdminProfile />} />
-            <Route path="create-product" element={<CreateProducts />}/>
-            <Route path="view-product" element={<ViewProducts />}/>
-            <Route path="add-warranty" element={<AddWarranty />}/>
-            <Route path="view-warranty" element={<ViewWarranty />}/>
-            <Route path="upload-drivers" element={<UploadDrivers />}/>
-            <Route path="view-drivers" element={<ViewDrivers />}/>
+            <Route path="create-product" element={<CreateProducts />} />
+            <Route path="view-product" element={<ViewProducts />} />
+            <Route path="add-warranty" element={<AddWarranty />} />
+            <Route path="view-warranty" element={<ViewWarranty />} />
+            <Route path="upload-drivers" element={<UploadDrivers />} />
+            <Route path="view-drivers" element={<ViewDrivers />} />
             <Route path="partners" element={<AdminPartners />} />
             <Route path="customers" element={<AdminCustomers />} />
             {/* <Route path="create-product" element={<CreateProduct />} /> */}
           </Route>
         </Route>
-
         {/* <Route path="/admin" element={<AdminLayout />}>
           <Route index element={<AdminDashboard />} />
           <Route path="dashboard" element={<AdminDashboard />} />
@@ -265,12 +276,9 @@ const App = () => {
           <Route path="customers" element={<ViewCustomers />} />
         </Route> */}
         {/* {AdminRoutes} */}
-
-
-
         {/* Product Page Routing */}
-        <Route path="/products/:category" element={<ProductList />}/>
-        <Route path="/products/details/:slug" element={<ProductDetails />}/>
+        <Route path="/products/:category" element={<ProductList />} />
+        <Route path="/products/details/:slug" element={<ProductDetails />} />
       </Routes>
       {/* <Footer /> */}
     </>
