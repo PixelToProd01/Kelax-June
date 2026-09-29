@@ -56,13 +56,18 @@ const WarrantyCallLog = () => {
             </p>
 
             <div className="mt-10 flex flex-wrap justify-center gap-4">
-              <button className="bg-white text-[#006db8] px-8 py-3 rounded-full font-semibold hover:scale-105 transition">
+              <button
+                onClick={() =>
+                  (window.location.href = "https://support.kelax.in")
+                }
+                className="bg-white cursor-pointer text-[#006db8] px-8 py-3 rounded-full font-semibold hover:scale-105 transition"
+              >
                 Raise Support Ticket
               </button>
 
-              <button className="border border-white px-8 py-3 rounded-full font-semibold hover:bg-white hover:text-[#006db8] transition">
+              {/* <button className="border border-white px-8 py-3 rounded-full font-semibold hover:bg-white hover:text-[#006db8] transition">
                 Contact Support
-              </button>
+              </button> */}
             </div>
           </div>
         </section>
@@ -231,7 +236,10 @@ const WarrantyCallLog = () => {
               business.
             </p>
 
-            <button className="mt-8 bg-[#006db8] text-white px-8 py-3 rounded-full font-semibold hover:bg-[#005999] transition">
+            <button
+              onClick={() => (window.location.href = "tel:+919355854953")}
+              className="mt-8 cursor-pointer bg-[#006db8] text-white px-8 py-3 rounded-full font-semibold hover:bg-[#005999] transition"
+            >
               Talk To Support Team
             </button>
           </div>
