@@ -38,7 +38,7 @@ const WarrantyCheck = () => {
 
       setData(res.data.warranty);
     } catch (err) {
-      setError(err.response?.data?.message || "Serial Not Exist");
+      setError(err.response?.data?.message || "This Serial Number Not Exist");
     } finally {
       setLoading(false);
     }
