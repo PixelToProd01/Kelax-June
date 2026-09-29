@@ -62,11 +62,26 @@ const AddWarranty = () => {
     fetchProducts();
   }, []);
 
+  // Use for Filter model number on the basis of category -> server, workstation
+  const filteredProducts = products.filter((item) => {
+    const productType = (item.type || item.category || "").toLowerCase();
+    const selectedCategory = formData.category.toLowerCase();
+
+    return productType === selectedCategory;
+  });
+
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+    const { name, value } = e.target;
+
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+
+      // Product type change hone par old model remove
+      ...(name === "category" && {
+        modelNumber: "",
+      }),
+    }));
   };
 
   const handleSubmit = async (e) => {
@@ -208,7 +223,7 @@ const AddWarranty = () => {
             >
               <option value="">Select Product</option>
 
-              {products.map((item) => (
+              {filteredProducts.map((item) => (
                 <option key={item._id} value={item._id}>
                   {item.name}
                 </option>
