@@ -282,10 +282,10 @@ const WarrantyCheck = () => {
                       <p className="text-sm text-gray-500 mb-1">Call Us</p>
 
                       <a
-                        href="tel:8800605034"
+                        href="tel:9355854953"
                         className="font-semibold text-[#006db8]"
                       >
-                        +91 8800605034
+                        +91 9355854953
                       </a>
                     </div>
                   </div>
