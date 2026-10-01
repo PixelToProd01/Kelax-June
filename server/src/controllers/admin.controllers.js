@@ -3,6 +3,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import User from "../models/user.model.js";
 import Product from "../models/product.model.js";
+import { sendAccountApprovalMail } from "../emails/sendAccountApprovalMail.js";
 
 //  Admin Login
 export const adminLogin = async (req, res) => {
@@ -108,12 +109,12 @@ export const getAdminStats = async (req, res) => {
     const totalProducts = await Product.countDocuments();
 
     const totalServers = await Product.countDocuments({
-      category: "server"
-    })
+      category: "server",
+    });
 
     const totalWorkstations = await Product.countDocuments({
-      category: "workstation"
-    })
+      category: "workstation",
+    });
 
     res.status(200).json({
       success: true,
@@ -123,7 +124,7 @@ export const getAdminStats = async (req, res) => {
         totalCustomers,
         totalProducts,
         totalServers,
-        totalWorkstations
+        totalWorkstations,
       },
     });
   } catch (error) {
@@ -218,7 +219,7 @@ export const getAllPartners = async (req, res) => {
       .skip(skip)
       .limit(limit);
 
-    const total = await User.countDocuments({role: "partner" });
+    const total = await User.countDocuments({ role: "partner" });
 
     res.status(200).json({
       success: true,
@@ -319,6 +320,19 @@ export const approveUser = async (req, res) => {
 
     await user.save();
 
+    /* =========================
+   SEND APPROVAL EMAIL
+    ========================= */
+    if (status === "active") {
+      const emailSent = await sendAccountApprovalMail(user);
+
+      if (!emailSent) {
+        console.warn(
+          `Approval email failed for ${user.email}, but user was activated successfully`,
+        );
+      }
+    }
+
     res.status(200).json({
       success: true,
       message: `User ${status} successfully`,
@@ -332,9 +346,9 @@ export const approveUser = async (req, res) => {
   }
 };
 
-  // @desc    Delete user (Admin only)
-  // @route   DELETE /api/admin/delete-user/:userId
-  // @access  Admin
+// @desc    Delete user (Admin only)
+// @route   DELETE /api/admin/delete-user/:userId
+// @access  Admin
 
 export const deleteUser = async (req, res) => {
   try {
@@ -354,9 +368,7 @@ export const deleteUser = async (req, res) => {
 
     // ❌ admin cannot delete himself
     if (user._id.toString() === req.user._id.toString()) {
-      return res
-        .status(403)
-        .json({ message: "Admin cannot delete himself" });
+      return res.status(403).json({ message: "Admin cannot delete himself" });
     }
 
     await user.deleteOne();
@@ -371,7 +383,6 @@ export const deleteUser = async (req, res) => {
     res.status(500).json({ message: "Failed to delete user" });
   }
 };
-
 
 // Create Employee BY Admin  --> Pending Currently
 export const createEmployee = async (req, res) => {

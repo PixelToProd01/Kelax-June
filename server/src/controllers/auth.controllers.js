@@ -7,6 +7,8 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import User from "../models/user.model.js";
 import { sendForgotOtpMail, sendOtpMail } from "../emails/sendOtpMail.js";
+import { sendRegistrationNotificationMail } from "../emails/sendRegistrationNotificationMail.js";
+import { sendRegistrationSuccessMail } from "../emails/sendRegistrationSuccessMail.js";
 
 // ========== Register =========
 export const registerUser = async (req, res) => {
@@ -167,6 +169,26 @@ export const emailVerify = async (req, res) => {
     user.verifyEmailOtp = undefined;
     user.verifyEmailOtpExpire = undefined;
     await user.save();
+
+    // =====================================================
+    // 1. SEND NOTIFICATION TO KELAX OFFICE
+    // =====================================================
+
+    const adminEmailSent = await sendRegistrationNotificationMail(user);
+
+    if (!adminEmailSent) {
+      console.warn("Registration notification email failed");
+    }
+
+    // =====================================================
+    // 2. SEND REGISTRATION SUCCESS EMAIL TO USER
+    // =====================================================
+
+    const registrationEmailSent = await sendRegistrationSuccessMail(user);
+
+    if (!registrationEmailSent) {
+      console.warn("Registration success email failed");
+    }
 
     res.status(200).json({
       success: true,
@@ -483,11 +505,7 @@ export const downloadCertificate = async (req, res) => {
       return res.status(404).json({ message: "User not found" });
     }
 
-    if (
-      user.userStatus !== "active" ||
-      !user.activeFrom ||
-      !user.activeTill
-    ) {
+    if (user.userStatus !== "active" || !user.activeFrom || !user.activeTill) {
       return res.status(400).json({
         message: "Certificate not available. User not active.",
       });
@@ -508,48 +526,37 @@ export const downloadCertificate = async (req, res) => {
 
     // ✅ IMPORTANT: Pipe first before anything
     res.setHeader("Content-Type", "application/pdf");
-    res.setHeader(
-      "Content-Disposition",
-      "inline; filename=certificate.pdf"
-    );
+    res.setHeader("Content-Disposition", "inline; filename=certificate.pdf");
 
     doc.pipe(res);
 
     // ✅ Correct template path
-    const templatePath = path.join(
-      __dirname,
-      "../templates/certificate.png"
-    );
+    const templatePath = path.join(__dirname, "../templates/certificate.png");
 
     // Background image
     doc.image(templatePath, 0, 0, { width: 842, height: 600 });
 
     // Partner Name
-    doc.fontSize(28)
-      .fillColor("#0f3b63")
-      .text(user.company.name, 65, 237, {
-        align: "center",
-      });
+    doc.fontSize(28).fillColor("#0f3b63").text(user.company.name, 65, 237, {
+      align: "center",
+    });
 
     // Dates
-    doc.fontSize(14)
-      .fillColor("black")
-      .text(
-        // `Approval Date : ${user.activeFrom.toDateString()}`,
-        ` ${user.activeFrom.toDateString()}`,
-        600,
-        452
-      );
+    doc.fontSize(14).fillColor("black").text(
+      // `Approval Date : ${user.activeFrom.toDateString()}`,
+      ` ${user.activeFrom.toDateString()}`,
+      600,
+      452,
+    );
 
     doc.text(
       // `Cert. Expiry Date : ${user.activeTill.toDateString()}`,
       ` ${user.activeTill.toDateString()}`,
       600,
-      484
+      484,
     );
 
     doc.end(); // ✅ End after everything
-
   } catch (error) {
     console.error("Certificate Error:", error);
 
@@ -561,7 +568,6 @@ export const downloadCertificate = async (req, res) => {
     }
   }
 };
-
 
 // --------------  Update My Profile  ---------------
 // export const updateMyProfile = async (req, res) => {
