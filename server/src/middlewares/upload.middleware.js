@@ -8,7 +8,7 @@ const storage = multer.diskStorage({
       const category = req.body.category;
 
       if (!category) {
-        return cb(new Error("Category is required before file upload"));
+        return cb(new Error("Product Category is required before file upload"));
       }
 
       // Allow only valid categories
@@ -23,9 +23,11 @@ const storage = multer.diskStorage({
         folder = `uploads/products/${category}/images`;
       }
 
-      // PDF
-      if (file.fieldname === "datasheet") {
+      // ---------------- DATASHEET ----------------
+      else if (file.fieldname === "datasheet") {
         folder = `uploads/products/${category}/datasheets`;
+      } else {
+        return cb(new Error("Invalid file field"));
       }
 
       // Create folder if not exists

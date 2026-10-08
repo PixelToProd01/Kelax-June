@@ -1,6 +1,38 @@
 import Product from "../models/product.model.js";
 import slugify from "slugify";
 import fs from "fs";
+import path from "path";
+
+// ============================================================
+// DELETE OLD PRODUCT FILE
+// ============================================================
+const deleteUploadedFile = (fileUrl) => {
+  try {
+    if (!fileUrl) return;
+
+    /*
+      DB example:
+      /uploads/products/server/images/old.jpg
+
+      Convert to:
+      uploads/products/server/images/old.jpg
+    */
+
+    const relativePath = fileUrl.replace(/^\/+/, "").replace(/\//g, path.sep);
+
+    const filePath = path.resolve(relativePath);
+
+    if (fs.existsSync(filePath)) {
+      fs.unlinkSync(filePath);
+
+      console.log("Old file deleted:", filePath);
+    } else {
+      console.log("Old file not found:", filePath);
+    }
+  } catch (error) {
+    console.error("Old file deletion failed:", error.message);
+  }
+};
 
 // CREATE PRODUCT
 export const createProduct = async (req, res) => {
@@ -156,10 +188,13 @@ export const getProductBySlug = async (req, res) => {
 //   }
 // };
 
-// DELETE PRODUCT
+// ================= DELETE PRODUCT =================
 export const deleteProduct = async (req, res) => {
   try {
-    const product = await Product.findById(req.params.id);
+    const { id } = req.params;
+
+    // Find product first
+    const product = await Product.findById(id);
 
     if (!product) {
       return res.status(404).json({
@@ -168,16 +203,33 @@ export const deleteProduct = async (req, res) => {
       });
     }
 
+    // ==========================================
+    // DELETE PRODUCT IMAGE FROM SERVER
+    // ==========================================
+    if (product.image) {
+      deleteUploadedFile(product.image);
+    }
+
+    // ==========================================
+    // DELETE PRODUCT DATASHEET FROM SERVER
+    // ==========================================
+    if (product.datasheet) {
+      deleteUploadedFile(product.datasheet);
+    }
+
+    // ==========================================
+    // DELETE PRODUCT FROM DATABASE
+    // ==========================================
     await product.deleteOne();
 
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
-      message: "Product deleted successfully",
+      message: "Product, image and datasheet deleted successfully",
     });
   } catch (error) {
-    console.log(error);
+    console.error("DELETE PRODUCT ERROR:", error);
 
-    res.status(500).json({
+    return res.status(500).json({
       success: false,
       message: error.message,
     });
@@ -199,51 +251,109 @@ export const getProductById = async (req, res) => {
   }
 };
 
-// Edit Product
+// ============================================================
+// UPDATE PRODUCT
+// ============================================================
 export const updateProduct = async (req, res) => {
   try {
     const { id } = req.params;
+
     const { name, category, introduction, specifications } = req.body;
 
+    // ----------------------------------------------------------
+    // Find existing product
+    // ----------------------------------------------------------
     const existingProduct = await Product.findById(id);
+
     if (!existingProduct) {
-      return res
-        .status(404)
-        .json({ success: false, message: "Product Not Found" });
+      return res.status(404).json({
+        success: false,
+        message: "Product Not Found",
+      });
     }
 
-    // Dynamic Updating
+    // ----------------------------------------------------------
+    // Update normal fields
+    // ----------------------------------------------------------
     existingProduct.name = name || existingProduct.name;
+
     existingProduct.category = category || existingProduct.category;
-    existingProduct.introduction = introduction || existingProduct.introduction;
 
-    if (specifications) {
-      existingProduct.specifications =
-        typeof specifications === "string"
-          ? JSON.parse(specifications)
-          : specifications;
+    existingProduct.introduction = introduction ?? existingProduct.introduction;
+
+    // ----------------------------------------------------------
+    // Update specifications
+    // ----------------------------------------------------------
+    if (specifications !== undefined) {
+      try {
+        existingProduct.specifications =
+          typeof specifications === "string"
+            ? JSON.parse(specifications)
+            : specifications;
+      } catch (error) {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid specifications format",
+        });
+      }
     }
 
-    // Handle Image Upload if new file provided
-    if (req.files?.image) {
-      existingProduct.image = req.files.image[0].path;
+    // ==========================================================
+    // IMAGE REPLACEMENT
+    // ==========================================================
+    if (req.files?.image?.[0]) {
+      // Save old image path BEFORE replacing it
+      const oldImage = existingProduct.image;
+
+      // Convert Windows path to URL path
+      const newImage = "/" + req.files.image[0].path.replace(/\\/g, "/");
+
+      // Update DB with new image
+      existingProduct.image = newImage;
+
+      // Delete old image from server
+      if (oldImage && oldImage !== newImage) {
+        deleteUploadedFile(oldImage);
+      }
     }
 
-    //Handle Datasheet Upload if new file provided
-    if (req.files?.datasheet) {
-      existingProduct.datasheet = req.files.datasheet[0].path;
+    // ==========================================================
+    // DATASHEET REPLACEMENT
+    // ==========================================================
+    if (req.files?.datasheet?.[0]) {
+      // Save old datasheet path BEFORE replacing it
+      const oldDatasheet = existingProduct.datasheet;
+
+      // Convert Windows path to URL path
+      const newDatasheet =
+        "/" + req.files.datasheet[0].path.replace(/\\/g, "/");
+
+      // Update DB with new datasheet
+      existingProduct.datasheet = newDatasheet;
+
+      // Delete old datasheet from server
+      if (oldDatasheet && oldDatasheet !== newDatasheet) {
+        deleteUploadedFile(oldDatasheet);
+      }
     }
 
+    // ----------------------------------------------------------
+    // Save product
+    // ----------------------------------------------------------
     await existingProduct.save();
 
-    res
-      .status(200)
-      .json({
-        success: true,
-        message: "Product Updated Successfully",
-        product: existingProduct,
-      });
+    return res.status(200).json({
+      success: true,
+      message: "Product Updated Successfully",
+      product: existingProduct,
+    });
   } catch (error) {
-    res.status(500).json({ success: false, message: "Product update failed" });
+    console.error("UPDATE PRODUCT ERROR:", error);
+
+    return res.status(500).json({
+      success: false,
+      message: "Product update failed",
+      error: error.message,
+    });
   }
 };

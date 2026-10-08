@@ -41,7 +41,7 @@ const ProductDetails = () => {
     const fetchProduct = async () => {
       try {
         const res = await axios.get(
-          `${serverUrl}/api/product/get-product/${slug}`
+          `${serverUrl}/api/product/get-product-by-slug/${slug}`
         );
 
         setProduct(res.data.product);
