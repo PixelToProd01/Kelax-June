@@ -203,7 +203,7 @@ const EditProductModal = ({ productId, onClose, onUpdateSuccess }) => {
       fetchProductDetails();
     }
   }, [productId, onClose]);
-
+  
   // ==========================================================
   // SPECIFICATION VALUE
   // ==========================================================

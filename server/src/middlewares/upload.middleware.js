@@ -55,6 +55,10 @@ const storage = multer.diskStorage({
   },
 });
 
+// ==================================================
+// FILE FILTER
+// ==================================================
+
 const fileFilter = (req, file, cb) => {
   // IMAGE VALIDATION
   if (file.fieldname === "image") {

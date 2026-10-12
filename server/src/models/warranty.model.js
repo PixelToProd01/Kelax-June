@@ -53,10 +53,10 @@ const warrantySchema = new mongoose.Schema(
       // required: true,
     },
 
-    customerCompany: {
-      type: String,
-      // required: true,
-    },
+    // customerCompany: {
+    //   type: String,
+    //   // required: true,
+    // },
 
     resellerName: {
       type: String,

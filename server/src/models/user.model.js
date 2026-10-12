@@ -60,10 +60,10 @@ const userSchema = new mongoose.Schema(
         type: String,
         trim: true,
         lowercase: true,
-        match: [
-          /^(https?:\/\/)?(www\.)?[a-z0-9-]+(\.[a-z]{2,})(\/.*)?$/,
-          "Invalid website URL",
-        ],
+        // match: [
+        //   /^(https?:\/\/)?(www\.)?[a-z0-9-]+(\.[a-z]{2,})(\/.*)?$/,
+        //   "Invalid website URL",
+        // ],
       },
       partnershipType: {
         type: String,

@@ -5,17 +5,19 @@ const specificationSchema = new mongoose.Schema(
     key: {
       type: String,
       required: true,
+      trim: true,
     },
     value: {
       type: String,
       required: true,
+      trim: true,
     },
   },
   { _id: false },
 );
 
 const productSchema = new mongoose.Schema(
-  {
+  { 
     name: {
       type: String,
       required: true,
@@ -25,6 +27,7 @@ const productSchema = new mongoose.Schema(
     slug: {
       type: String,
       unique: true,
+      trim: true,
     },
 
     category: {
