@@ -537,23 +537,23 @@ export const downloadCertificate = async (req, res) => {
     doc.image(templatePath, 0, 0, { width: 842, height: 600 });
 
     // Partner Name
-    doc.fontSize(28).fillColor("#0f3b63").text(user.company.name, 65, 237, {
+    doc.fontSize(28).fillColor("#0f3b63").text(user.company.name, 65, 270, {
       align: "center",
     });
 
     // Dates
-    doc.fontSize(14).fillColor("black").text(
+    doc.fontSize(14).fillColor("#0004a6").text(
       // `Approval Date : ${user.activeFrom.toDateString()}`,
-      ` ${user.activeFrom.toDateString()}`,
-      600,
-      452,
+      ` ${user.activeFrom.toLocaleDateString()}`,
+      670,
+      405,
     );
 
     doc.text(
       // `Cert. Expiry Date : ${user.activeTill.toDateString()}`,
-      ` ${user.activeTill.toDateString()}`,
-      600,
-      484,
+      ` ${user.activeTill.toLocaleDateString()}`,
+      690,
+      462,
     );
 
     doc.end(); // ✅ End after everything
