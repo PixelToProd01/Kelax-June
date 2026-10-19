@@ -140,7 +140,7 @@ import { sendRegistrationSuccessMail } from "../emails/sendRegistrationSuccessMa
 // };
 
 export const registerUser = async (req, res) => {
-  const OTP_EXPIRES_MINUTES = 1;
+  const OTP_EXPIRES_MINUTES = 10;
 
   try {
     const {
