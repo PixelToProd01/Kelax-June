@@ -178,6 +178,172 @@ export const getAllWarranties = async (req, res) => {
   }
 };
 
+/* ================= UPDATE WARRANTY (ADMIN) ================= */
+export const updateWarranty = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const {
+      category,
+      serialNumber,
+      modelNumber,
+      customerName,
+      customerEmail,
+      customerContact,
+      customerAddress,
+      resellerName,
+      productConfiguration,
+      warrantyType,
+      validFrom,
+      validTo,
+    } = req.body;
+
+    // Validate MongoDB warranty ID
+    if (!id.match(/^[0-9a-fA-F]{24}$/)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid warranty ID",
+      });
+    }
+
+    // Required fields
+    if (
+      !category ||
+      !serialNumber?.trim() ||
+      !modelNumber ||
+      !resellerName?.trim() ||
+      !productConfiguration?.trim() ||
+      !validFrom ||
+      !validTo
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: "Please fill all required fields",
+      });
+    }
+
+    if (!["server", "workstation"].includes(category)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid product type",
+      });
+    }
+
+    if (!["NBD", "MissionCritical"].includes(warrantyType)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid warranty type",
+      });
+    }
+
+    const startDate = new Date(validFrom);
+    const endDate = new Date(validTo);
+
+    if (Number.isNaN(startDate.getTime()) || Number.isNaN(endDate.getTime())) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid warranty dates",
+      });
+    }
+
+    if (endDate < startDate) {
+      return res.status(400).json({
+        success: false,
+        message: "Warranty end date cannot be before start date",
+      });
+    }
+
+    // Verify product exists and belongs to selected category
+    const product = await Product.findById(modelNumber);
+
+    if (!product) {
+      return res.status(404).json({
+        success: false,
+        message: "Product not found",
+      });
+    }
+
+    const productCategory = (
+      product.type ||
+      product.category ||
+      ""
+    ).toLowerCase();
+
+    if (productCategory !== category) {
+      return res.status(400).json({
+        success: false,
+        message: "Selected product does not match product type",
+      });
+    }
+
+    // Check duplicate serial number, excluding this warranty
+    const normalizedSerial = serialNumber.trim().toUpperCase();
+
+    const duplicate = await Warranty.findOne({
+      serialNumber: normalizedSerial,
+      _id: { $ne: id },
+    });
+
+    if (duplicate) {
+      return res.status(409).json({
+        success: false,
+        message: "Another warranty already exists for this Serial Number",
+      });
+    }
+
+    const warranty = await Warranty.findByIdAndUpdate(
+      id,
+      {
+        $set: {
+          category,
+          serialNumber: normalizedSerial,
+          modelNumber,
+          customerName: customerName?.trim() || "",
+          customerEmail: customerEmail?.trim() || "",
+          customerContact: customerContact?.trim() || "",
+          customerAddress: customerAddress?.trim() || "",
+          resellerName: resellerName.trim(),
+          productConfiguration: productConfiguration.trim(),
+          warrantyType,
+          validFrom: startDate,
+          validTo: endDate,
+        },
+      },
+      {
+        new: true,
+        runValidators: true,
+      },
+    ).populate("modelNumber", "name category type");
+
+    if (!warranty) {
+      return res.status(404).json({
+        success: false,
+        message: "Warranty not found",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Warranty updated successfully",
+      warranty,
+    });
+  } catch (error) {
+    console.error("Update warranty error:", error);
+
+    if (error.code === 11000) {
+      return res.status(409).json({
+        success: false,
+        message: "Duplicate Serial Number not allowed",
+      });
+    }
+
+    return res.status(500).json({
+      success: false,
+      message: "Failed to update warranty",
+    });
+  }
+};
+
 // ✅ Admin :- Delete Warranty
 export const deleteWarranties = async (req, res) => {
   try {

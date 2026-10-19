@@ -11,8 +11,136 @@ import { sendRegistrationNotificationMail } from "../emails/sendRegistrationNoti
 import { sendRegistrationSuccessMail } from "../emails/sendRegistrationSuccessMail.js";
 
 // ========== Register =========
+// export const registerUser = async (req, res) => {
+//   const OTP_EXPIRES_MINUTES = 10; // OTP Valid For 10 Minutes Only
+
+//   try {
+//     const {
+//       fullName,
+//       email,
+//       password,
+//       phone,
+//       role,
+//       jobTitle,
+//       jobLevel,
+//       company,
+//     } = req.body;
+
+//     // 1️⃣ Basic user validation
+//     if (!fullName || !email || !phone || !password || !role) {
+//       return res
+//         .status(400)
+//         .json({ message: "Please fill all required fields" });
+//     }
+
+//     if (
+//       (role === "partner" || role === "customer") &&
+//       (!jobTitle || !jobLevel)
+//     ) {
+//       return res.status(400).json({
+//         message: "Job title and job level required for partner/customer",
+//       });
+//     }
+
+//     // 2️⃣ Role-based company validation
+//     if (role === "partner" || role === "customer") {
+//       if (!company) {
+//         return res.status(400).json({
+//           message: "Company details are required for partner/customer",
+//         });
+//       }
+
+//       const requiredCompanyFields = [
+//         "name",
+//         "address",
+//         "city",
+//         "pinCode",
+//         "phone",
+//         "email",
+//       ];
+//       for (let field of requiredCompanyFields) {
+//         if (!company[field]) {
+//           return res
+//             .status(400)
+//             .json({ message: `Company ${field} is required` });
+//         }
+//       }
+//     }
+
+//     // 3️⃣ Check if user already exists
+//     // const existUser = await User.findOne({ email }).select("-password");
+//     const existUser = await User.findOne({ email });
+//     if (existUser) {
+//       return res
+//         .status(400)
+//         .json({ message: "This Email Already Registered!" });
+//     }
+
+//     // 4️⃣ Hash password
+//     // const hashedPassword = await bcrypt.hash(password, 10); // user123 -> ejbcuwyecudddeybe
+
+//     // Make OTP
+//     const otp = Math.floor(100000 + Math.random() * 900000).toString(); // 6 digit
+//     const hashedOtp = await bcrypt.hash(otp, 10);
+
+//     const verifyEmailOtpExpire = Date.now() + OTP_EXPIRES_MINUTES * 60 * 1000;
+
+//     // 5️⃣ Prepare new user object
+//     // const newUser = new User.create({
+//     const user = await User.create({
+//       fullName,
+//       email,
+//       phone,
+//       // password: hashedPassword,
+//       password, // ✅ NO bcrypt here
+//       role,
+//       jobTitle: jobTitle || null,
+//       jobLevel: jobLevel || null,
+//       company: company || null,
+//       verifyEmailOtp: hashedOtp,
+//       verifyEmailOtpExpire,
+
+//       isVerified: false, // OTP verification can be implemented later
+//       userStatus: "pending", // Will be active after Admin verification
+//     });
+
+//     // Send OTP Mail
+//     const emailSent = await sendOtpMail(user, otp);
+
+//     if (!emailSent) {
+//       console.warn("OTP email failed but user registered");
+//     }
+
+//     // 🔐 TEMP TOKEN (15 min only)
+//     const verifyToken = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
+//       expiresIn: "15m",
+//     });
+
+//     res.status(201).json({
+//       success: true,
+//       message: "OTP sent to your email",
+//       verifyToken,
+//     });
+
+//     // 6️⃣ Save user
+//     // const user = await newUser.save();
+//     // const { password: pass, verifyEmailOtp: verify, ...rest } = user._doc; // hide Password
+
+//     // // 7️⃣ Respond
+//     // res.status(201).json({
+//     //   success: true,
+//     //   message:
+//     //     "User registered successfully. Please verify your email to activate account.",
+//     //   user: rest,
+//     // });
+//   } catch (error) {
+//     console.error("Register Error:", error);
+//     res.status(500).json({ message: "Server error" });
+//   }
+// };
+
 export const registerUser = async (req, res) => {
-  const OTP_EXPIRES_MINUTES = 10; // OTP Valid For 10 Minutes Only
+  const OTP_EXPIRES_MINUTES = 1;
 
   try {
     const {
@@ -26,116 +154,182 @@ export const registerUser = async (req, res) => {
       company,
     } = req.body;
 
-    // 1️⃣ Basic user validation
+    // 1. Basic validation
     if (!fullName || !email || !phone || !password || !role) {
-      return res
-        .status(400)
-        .json({ message: "Please fill all required fields" });
-    }
-
-    if (
-      (role === "partner" || role === "customer") &&
-      (!jobTitle || !jobLevel)
-    ) {
       return res.status(400).json({
-        message: "Job title and job level required for partner/customer",
+        success: false,
+        message: "Please fill all required fields",
       });
     }
 
-    // 2️⃣ Role-based company validation
-    if (role === "partner" || role === "customer") {
-      if (!company) {
+    if (!["partner", "customer"].includes(role)) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid registration role",
+      });
+    }
+
+    if (!jobTitle || !jobLevel) {
+      return res.status(400).json({
+        success: false,
+        message: "Job title and job level are required",
+      });
+    }
+
+    // 2. Validate company details
+    if (!company) {
+      return res.status(400).json({
+        success: false,
+        message: "Company details are required",
+      });
+    }
+
+    const requiredCompanyFields = [
+      "name",
+      "address",
+      "city",
+      "pinCode",
+      "phone",
+      "email",
+    ];
+
+    for (const field of requiredCompanyFields) {
+      if (!company[field]) {
         return res.status(400).json({
-          message: "Company details are required for partner/customer",
+          success: false,
+          message: `Company ${field} is required`,
+        });
+      }
+    }
+
+    // 3. Normalize email
+    const normalizedEmail = email.trim().toLowerCase();
+
+    // 4. Check existing account
+    let user = await User.findOne({ email: normalizedEmail });
+
+    if (user) {
+      // Verified accounts must never be overwritten by registration
+      if (user.isVerified) {
+        return res.status(409).json({
+          success: false,
+          message: "This email is already registered. Please log in.",
         });
       }
 
-      const requiredCompanyFields = [
-        "name",
-        "address",
-        "city",
-        "pinCode",
-        "phone",
-        "email",
-      ];
-      for (let field of requiredCompanyFields) {
-        if (!company[field]) {
-          return res
-            .status(400)
-            .json({ message: `Company ${field} is required` });
-        }
+      // Do not allow registration to change an existing account's role
+      if (user.role !== role) {
+        return res.status(409).json({
+          success: false,
+          message: "This email already has a pending registration.",
+        });
+      }
+
+      // Check whether the existing OTP is still valid
+      const otpIsStillValid =
+        user.verifyEmailOtp &&
+        user.verifyEmailOtpExpire &&
+        new Date(user.verifyEmailOtpExpire).getTime() > Date.now();
+
+      if (otpIsStillValid) {
+        return res.status(409).json({
+          success: false,
+          message:
+            "A verification OTP has already been sent. Please verify it or wait until it expires before registering again.",
+        });
       }
     }
 
-    // 3️⃣ Check if user already exists
-    // const existUser = await User.findOne({ email }).select("-password");
-    const existUser = await User.findOne({ email });
-    if (existUser) {
-      return res
-        .status(400)
-        .json({ message: "This Email Already Registered!" });
-    }
-
-    // 4️⃣ Hash password
-    // const hashedPassword = await bcrypt.hash(password, 10); // user123 -> ejbcuwyecudddeybe
-
-    // Make OTP
-    const otp = Math.floor(100000 + Math.random() * 900000).toString(); // 6 digit
+    // 5. Generate a new OTP
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
     const hashedOtp = await bcrypt.hash(otp, 10);
 
-    const verifyEmailOtpExpire = Date.now() + OTP_EXPIRES_MINUTES * 60 * 1000;
+    const verifyEmailOtpExpire = new Date(
+      Date.now() + OTP_EXPIRES_MINUTES * 60 * 1000,
+    );
 
-    // 5️⃣ Prepare new user object
-    // const newUser = new User.create({
-    const user = await User.create({
-      fullName,
-      email,
-      phone,
-      // password: hashedPassword,
-      password, // ✅ NO bcrypt here
-      role,
-      jobTitle: jobTitle || null,
-      jobLevel: jobLevel || null,
-      company: company || null,
-      verifyEmailOtp: hashedOtp,
-      verifyEmailOtpExpire,
+    if (user) {
+      // 6A. Reuse expired/unusable pending account
+      // Assign plaintext password; the User pre-save hook hashes it.
+      user.fullName = fullName.trim();
+      user.email = normalizedEmail;
+      user.password = password;
+      user.phone = phone.trim();
+      user.role = role;
+      user.jobTitle = jobTitle;
+      user.jobLevel = jobLevel;
+      user.company = company;
 
-      isVerified: false, // OTP verification can be implemented later
-      userStatus: "pending", // Will be active after Admin verification
-    });
+      user.verifyEmailOtp = hashedOtp;
+      user.verifyEmailOtpExpire = verifyEmailOtpExpire;
 
-    // Send OTP Mail
+      // Keep verification and admin approval separate
+      user.isVerified = false;
+      user.userStatus = "pending";
+      user.activeFrom = undefined;
+      user.activeTill = undefined;
+
+      await user.save();
+    } else {
+      // 6B. Create a new pending account
+      user = await User.create({
+        fullName: fullName.trim(),
+        email: normalizedEmail,
+        password,
+        phone: phone.trim(),
+        role,
+        jobTitle,
+        jobLevel,
+        company,
+        verifyEmailOtp: hashedOtp,
+        verifyEmailOtpExpire,
+        isVerified: false,
+        userStatus: "pending",
+      });
+    }
+
+    // 7. Send OTP email
     const emailSent = await sendOtpMail(user, otp);
 
     if (!emailSent) {
-      console.warn("OTP email failed but user registered");
+      // Clear unusable OTP so the user can retry registration
+      user.verifyEmailOtp = undefined;
+      user.verifyEmailOtpExpire = undefined;
+      await user.save();
+
+      return res.status(502).json({
+        success: false,
+        message:
+          "We could not send the verification email. Please try registering again.",
+      });
     }
 
-    // 🔐 TEMP TOKEN (15 min only)
+    // 8. Temporary token for email verification
     const verifyToken = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
       expiresIn: "15m",
     });
 
-    res.status(201).json({
+    return res.status(200).json({
       success: true,
-      message: "OTP sent to your email",
+      message: "Verification OTP sent to your email. It expires in 10 minutes.",
       verifyToken,
     });
-
-    // 6️⃣ Save user
-    // const user = await newUser.save();
-    // const { password: pass, verifyEmailOtp: verify, ...rest } = user._doc; // hide Password
-
-    // // 7️⃣ Respond
-    // res.status(201).json({
-    //   success: true,
-    //   message:
-    //     "User registered successfully. Please verify your email to activate account.",
-    //   user: rest,
-    // });
   } catch (error) {
     console.error("Register Error:", error);
-    res.status(500).json({ message: "Server error" });
+
+    // Handle concurrent requests with the same unique email
+    if (error.code === 11000) {
+      return res.status(409).json({
+        success: false,
+        message:
+          "This email was just registered. Please try verifying your email or registering again.",
+      });
+    }
+
+    return res.status(500).json({
+      success: false,
+      message: "Server error during registration",
+    });
   }
 };
 

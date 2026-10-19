@@ -4,6 +4,7 @@ import {
   deleteWarranties,
   getAllWarranties,
   getWarrantyBySerial,
+  updateWarranty,
 } from "../controllers/warranty.controllers.js";
 import {
   authorizeRoles,
@@ -36,6 +37,14 @@ warrantyRouter.get(
   isAdminAuthenticated,
   authorizeRoles("admin"),
   getAllWarranties,
+);
+
+// ADMIN Can Update Warranty
+warrantyRouter.put(
+  "/update-warranty/:id",
+  isAdminAuthenticated,
+  authorizeRoles("admin"),
+  updateWarranty,
 );
 
 // ADMIN Can Delete Warranty
