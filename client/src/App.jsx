@@ -76,7 +76,7 @@ import MyDeals from "./pages/Users/Partner/MyDeals.jsx";
 
 // export const serverUrl = "http://localhost:8000"; // Work on Laptop only  ------------ 1s
 
-// export const serverUrl = "";   // work for kelax use only When Code Is Deploy On Server Only
+export const serverUrl = "";   // work for kelax use only When Code Is Deploy On Server Only
 
 // export const serverUrl = "http://192.168.1.118:8000";  // Work
 
@@ -216,11 +216,11 @@ const App = () => {
         {/* Download Drivers */}
         <Route path="support/downloads" element={<DownloadDrivers />} />
         {/* Resources Page --> 1)Customer Success, 2)Blogs */}
-        <Route
+        {/* <Route
           path="resources/customer-success"
           element={<CustomerSuccess />}
-        />
-        <Route path="resources/blogs" element={<Blogs />} />
+        /> */}
+        {/* <Route path="resources/blogs" element={<Blogs />} /> */}
         {/* <Route path="/products" element={<Products />} />
         <Route path="/products/servers" element={<Servers />} />
         <Route path="/products/workstation" element={<Workstation />} />
