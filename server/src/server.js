@@ -15,6 +15,7 @@ import adminRouter from "./routes/admin.routes.js";
 import productRouter from "./routes/product.routes.js";
 import warrantyRouter from "./routes/warranty.routes.js";
 import driverRouter from "./routes/driver.routes.js";
+import dealRouter from "./routes/deal.routes.js";
 
 // Import Routes
 // import otpRoutes from "./routes/otp.routes.js";
@@ -47,7 +48,7 @@ app.use(
   cors({
     origin: [process.env.CLIENT_URL || "http://localhost:auto"],
     credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE"],
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"]
   }),
 );
 
@@ -76,6 +77,9 @@ app.use("/api/warranty", warrantyRouter);
 
 //  -------------------- Route For Drivers  --------------------
 app.use("/api/driver", driverRouter);
+
+// -------------------  Add alongside your existing API routes:   ----------------------
+app.use("/api/deals", dealRouter);
 
 // app.use("/api/otp", otpRoutes);
 // app.use("/api/auth", authRoutes);
