@@ -58,7 +58,7 @@ import AddWarranty from "./pages/Admin/Products/AddWarranty.jsx";
 import ViewWarranty from "./pages/Admin/Products/ViewWarranty.jsx";
 import WarrantyCallLog from "./pages/Support/WarrantyCallLog.jsx";
 import Company from "./pages/Static/Company.jsx";
-import Resources from "./pages/Static/Resources.jsx"; //-------------- CO
+// import Resources from "./pages/Static/Resources.jsx"; //-------------- CO
 
 // NEW --- After Deployment
 import UploadDrivers from "./pages/Admin/Products/UploadDrivers.jsx";
@@ -70,10 +70,13 @@ import ViewDrivers from "./pages/Admin/Products/ViewDrivers.jsx";
 
 // Import AnalyticsTracker for Google Analytics
 import AnalyticsTracker from "./components/AnalyticsTracker.jsx";
+import ManageDeals from "./pages/Admin/Partners/ManageDeals.jsx";
+import DealRegistration from "./pages/Users/Partner/DealRegistration.jsx";
+import MyDeals from "./pages/Users/Partner/MyDeals.jsx";
 
-// export const serverUrl = "http://localhost:8000"; // Work on Laptop only
+// export const serverUrl = "http://localhost:8000"; // Work on Laptop only  ------------ 1s
 
-export const serverUrl = "";   // work for kelax use only When Code Is Deploy On Server Only
+// export const serverUrl = "";   // work for kelax use only When Code Is Deploy On Server Only
 
 // export const serverUrl = "http://192.168.1.118:8000";  // Work
 
@@ -125,6 +128,8 @@ const App = () => {
             <Route path="dashboard" element={<PartnerDashboard />} />
             <Route path="profile" element={<PartnerProfile />} />
             <Route path="certificate" element={<PartnerCertificates />} />
+            <Route path="deal-registration" element={<DealRegistration />} />
+            <Route path="my-deals" element={<MyDeals />} />
             {/* <Route path="create-product" element={<CreateProduct />} /> */}
           </Route>
         </Route>
@@ -141,7 +146,7 @@ const App = () => {
         <Route path="/" element={<Home />} />
         <Route path="/about-us" element={<AboutUs />} />
         <Route path="/company" element={<Company />} />
-        <Route path="/resources" element={<Resources />} />
+        {/* <Route path="/resources" element={<Resources />} /> */}
         <Route path="/contact-us" element={<ContactUs />} />
         <Route path="/disclaimer" element={<Disclaimer />} />
         <Route path="/make-in-india" element={<MakeInIndia />} />
@@ -211,11 +216,11 @@ const App = () => {
         {/* Download Drivers */}
         <Route path="support/downloads" element={<DownloadDrivers />} />
         {/* Resources Page --> 1)Customer Success, 2)Blogs */}
-        {/* <Route
+        <Route
           path="resources/customer-success"
           element={<CustomerSuccess />}
         />
-        <Route path="resources/blogs" element={<Blogs />} /> */}
+        <Route path="resources/blogs" element={<Blogs />} />
         {/* <Route path="/products" element={<Products />} />
         <Route path="/products/servers" element={<Servers />} />
         <Route path="/products/workstation" element={<Workstation />} />
@@ -244,6 +249,7 @@ const App = () => {
             <Route path="view-drivers" element={<ViewDrivers />} />
             <Route path="partners" element={<AdminPartners />} />
             <Route path="customers" element={<AdminCustomers />} />
+            <Route path="manage-deals" element={<ManageDeals />} />
             {/* <Route path="create-product" element={<CreateProduct />} /> */}
           </Route>
         </Route>

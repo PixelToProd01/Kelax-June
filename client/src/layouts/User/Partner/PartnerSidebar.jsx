@@ -5,8 +5,12 @@ import {
   FileDown,
   Menu,
   X,
+  ShieldCheck,
 } from "lucide-react";
 import { useState } from "react";
+import { FaRegHandshake } from "react-icons/fa";
+import { LuDownload } from "react-icons/lu";
+import { FaUsersViewfinder } from "react-icons/fa6";
 
 const sectionClass =
   "px-4 mt-6 mb-2 text-xs font-semibold uppercase tracking-wider text-gray-400";
@@ -87,6 +91,42 @@ const PartnerSidebar = () => {
           >
             <FileDown size={18} />
             Certificate Downloads
+          </NavLink>
+
+          <NavLink
+            to="/partner/deal-registration"
+            className={linkClass}
+            onClick={() => setOpen(false)}
+          >
+            <FaRegHandshake size={18} />
+            Register Deal
+          </NavLink>
+
+          <NavLink
+            to="/partner/my-deals"
+            className={linkClass}
+            onClick={() => setOpen(false)}
+          >
+            <FaUsersViewfinder size={18} />
+            My Deals
+          </NavLink>
+
+          <NavLink
+            to="/support/downloads"
+            className={linkClass}
+            onClick={() => setOpen(false)}
+          >
+            <LuDownload size={18} />
+            Downloads Drivers
+          </NavLink>
+
+          <NavLink
+            to="/support/warranty-check"
+            className={linkClass}
+            onClick={() => setOpen(false)}
+          >
+            <ShieldCheck size={18} />
+            Check Warranty
           </NavLink>
 
         </nav>

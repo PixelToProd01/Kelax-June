@@ -155,6 +155,14 @@ const AdminSidebar = () => {
             <Users size={18} />
             View Partners
           </NavLink>
+          <NavLink
+            to="/admin/manage-deals"
+            className={linkClass}
+            onClick={() => setOpen(false)}
+          >
+            <Users size={18} />
+            Deal Registrations
+          </NavLink>
 
           {/* Customers */}
           <p className={sectionClass}>Customers</p>
