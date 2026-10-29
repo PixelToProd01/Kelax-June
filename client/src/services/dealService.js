@@ -10,11 +10,9 @@ const dealApi = axios.create({
   },
 });
 
-export const registerDeal = (data) =>
-  dealApi.post("/register", data);
+export const registerDeal = (data) => dealApi.post("/register", data);
 
-export const getMyDeals = () =>
-  dealApi.get("/my-deals");
+export const getMyDeals = () => dealApi.get("/my-deals");
 
 export const getMyDealById = (id) =>
   dealApi.get(`/my-deals/${encodeURIComponent(id)}`);
@@ -22,8 +20,7 @@ export const getMyDealById = (id) =>
 export const updateMyDeal = (id, data) =>
   dealApi.put(`/my-deals/${encodeURIComponent(id)}`, data);
 
-export const getAllDeals = () =>
-  dealApi.get("/admin/all");
+export const getAllDeals = () => dealApi.get("/admin/all");
 
 export const updateDealStatus = (id, data) =>
   dealApi.patch(`/admin/${encodeURIComponent(id)}/status`, data);
