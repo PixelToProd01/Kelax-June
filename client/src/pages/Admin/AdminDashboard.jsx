@@ -2,9 +2,11 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Users, UserCheck, User, Package, Server, Computer } from "lucide-react";
 import { serverUrl } from "../../App";
+import { useSelector } from "react-redux";
 
 const AdminDashboard = () => {
   const [stats, setStats] = useState(null);
+  const { adminData } = useSelector((state) => state.admin);
 
   useEffect(() => {
     const fetchStats = async () => {
@@ -23,7 +25,9 @@ const AdminDashboard = () => {
 
   return (
     <div className="p-4 md:p-6 bg-gray-100">
-      <h1 className="text-2xl font-bold mb-6 text-gray-800">Admin Dashboard</h1>
+      <h1 className="text-2xl font-bold mb-6 text-gray-800">
+        {adminData?.role === "employee" ? "Employee Dashboard" : "Admin Dashboard"}
+      </h1>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl">
         {!stats ? (
@@ -37,50 +41,69 @@ const AdminDashboard = () => {
           </>
         ) : (
           <>
+            {stats.totalUsers !== undefined && (
             <StatCard
               title="Total Users"
-              value={stats.totalUsers - 1 || "0"}
+              value={stats.totalUsers || "0"}
               icon={<Users size={28} />}
               color="from-purple-400 to-purple-600"
             />
+            )}
 
+            {stats.totalProducts !== undefined && (
             <StatCard
               title="Total Products"
               value={stats.totalProducts || "0"}
               icon={<Package size={28} />}
               color="from-orange-400 to-orange-600"
             />
+            )}
 
+            {stats.totalPartners !== undefined && (
             <StatCard
               title="Total Partners"
               value={stats.totalPartners || "0"}
               icon={<UserCheck size={28} />}
               color="from-green-400 to-green-600"
             />
+            )}
 
+            {stats.totalServers !== undefined && (
             <StatCard
               title="Total Servers"
               value={stats.totalServers || "0"}
               icon={<Server size={28} />}
               color="from-cyan-400 to-cyan-600"
             />
+            )}
 
+            {stats.totalCustomers !== undefined && (
             <StatCard
               title="Total Customers"
               value={stats.totalCustomers || "0"}
               icon={<User size={28} />}
               color="from-blue-400 to-blue-600"
             />
+            )}
 
+            {stats.totalWorkstations !== undefined && (
             <StatCard
               title="Total Workstations"
               value={stats.totalWorkstations || "0"}
               icon={<Computer size={28} />}
               color="from-gray-400 to-gray-600"
             />
+            )}
           </>
         )}
       </div>
+
+      {stats && Object.keys(stats).length === 0 && (
+        <p className="mt-2 text-gray-500">
+          Welcome! Use the menu on the left to open the sections you have
+          access to.
+        </p>
+      )}
     </div>
   );
 };

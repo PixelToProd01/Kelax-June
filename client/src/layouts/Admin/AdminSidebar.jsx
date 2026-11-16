@@ -13,8 +13,11 @@ import {
   View,
   FileUp,
   ScanEye,
+  ShieldCheck,
+  UserCog,
 } from "lucide-react";
 import { useState } from "react";
+import usePermission from "../../hooks/usePermission";
 
 const sectionClass =
   "px-4 mt-6 mb-2 text-xs font-semibold uppercase tracking-wider text-gray-400";
@@ -29,6 +32,15 @@ const linkClass = ({ isActive }) =>
 
 const AdminSidebar = () => {
   const [open, setOpen] = useState(false);
+  const { can, isAdmin } = usePermission();
+
+  // RBAC: which blocks of the sidebar this user may see
+  const showProducts =
+    can("products", "create") || can("products", "read") ||
+    can("warranty", "create") || can("warranty", "read") ||
+    can("drivers", "create") || can("drivers", "read");
+  const showPartners = can("partners", "read") || can("deals", "read");
+  const showCustomers = can("customers", "read");
 
   return (
     <>
@@ -56,7 +68,9 @@ const AdminSidebar = () => {
       >
         {/* Top Brand */}
         <div className="flex items-center justify-between px-6 py-4 border-b border-slate-700">
-          <h2 className="text-lg font-bold tracking-wide">Admin Panel</h2>
+          <h2 className="text-lg font-bold tracking-wide">
+            {isAdmin ? "Admin Panel" : "Employee Panel"}
+          </h2>
           <button onClick={() => setOpen(false)} className="md:hidden">
             <X size={20} />
           </button>
@@ -65,7 +79,7 @@ const AdminSidebar = () => {
         {/* Scrollable Area */}
         <nav className="h-[calc(100vh-64px)] overflow-y-auto pb-6">
           {/* Admin For */}
-          <p className={sectionClass}>Admin For</p>
+          <p className={sectionClass}>{isAdmin ? "Admin For" : "Employee For"}</p>
 
           <NavLink
             to="/admin/dashboard"
@@ -85,8 +99,32 @@ const AdminSidebar = () => {
             Profile
           </NavLink>
 
+          {/* Access Control (RBAC) – admin only */}
+          {isAdmin && (
+            <>
+              <p className={sectionClass}>Access Control</p>
+              <NavLink
+                to="/admin/roles"
+                className={linkClass}
+                onClick={() => setOpen(false)}
+              >
+                <ShieldCheck size={18} />
+                Manage Roles
+              </NavLink>
+              <NavLink
+                to="/admin/employees"
+                className={linkClass}
+                onClick={() => setOpen(false)}
+              >
+                <UserCog size={18} />
+                Employees
+              </NavLink>
+            </>
+          )}
+
           {/* Products */}
-          <p className={sectionClass}>Products</p>
+          {showProducts && <p className={sectionClass}>Products</p>}
+          {can("products", "create") && (
           <NavLink
             to="/admin/create-product"
             className={linkClass}
@@ -95,7 +133,9 @@ const AdminSidebar = () => {
             <PackagePlus size={18} />
             Create Product
           </NavLink>
+          )}
 
+          {can("products", "read") && (
           <NavLink
             to="/admin/view-product"
             className={linkClass}
@@ -104,8 +144,10 @@ const AdminSidebar = () => {
             <Package size={18} />
             View Products
           </NavLink>
+          )}
 
           {/* Add Warranty */}
+          {can("warranty", "create") && (
           <NavLink
             to="/admin/add-warranty"
             className={linkClass}
@@ -114,8 +156,10 @@ const AdminSidebar = () => {
             <Award size={18} />
             Add Warranty
           </NavLink>
+          )}
 
           {/* View Warranty */}
+          {can("warranty", "read") && (
           <NavLink
             to="/admin/view-warranty"
             className={linkClass}
@@ -124,8 +168,10 @@ const AdminSidebar = () => {
             <View size={18} />
             View Warranty
           </NavLink>
+          )}
 
           {/* Upload Drivers */}
+          {can("drivers", "create") && (
           <NavLink
             to="/admin/upload-drivers"
             className={linkClass}
@@ -134,8 +180,10 @@ const AdminSidebar = () => {
             <FileUp size={18} />
             Upload Drivers
           </NavLink>
+          )}
 
           {/* View Drivers */}
+          {can("drivers", "read") && (
           <NavLink
             to="/admin/view-drivers"
             className={linkClass}
@@ -144,9 +192,11 @@ const AdminSidebar = () => {
             <ScanEye size={18} />
             View Drivers
           </NavLink>
+          )}
 
           {/* Partners */}
-          <p className={sectionClass}>Partners</p>
+          {showPartners && <p className={sectionClass}>Partners</p>}
+          {can("partners", "read") && (
           <NavLink
             to="/admin/partners"
             className={linkClass}
@@ -155,6 +205,8 @@ const AdminSidebar = () => {
             <Users size={18} />
             View Partners
           </NavLink>
+          )}
+          {can("deals", "read") && (
           <NavLink
             to="/admin/manage-deals"
             className={linkClass}
@@ -163,9 +215,11 @@ const AdminSidebar = () => {
             <Users size={18} />
             Deal Registrations
           </NavLink>
+          )}
 
           {/* Customers */}
-          <p className={sectionClass}>Customers</p>
+          {showCustomers && <p className={sectionClass}>Customers</p>}
+          {can("customers", "read") && (
           <NavLink
             to="/admin/customers"
             className={linkClass}
@@ -174,6 +228,7 @@ const AdminSidebar = () => {
             <UserCheck size={18} />
             View Customers
           </NavLink>
+          )}
 
           {/* Orders */}
           {/* <p className={sectionClass}>Orders</p>

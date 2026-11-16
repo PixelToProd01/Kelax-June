@@ -16,7 +16,7 @@ const useAdminAuth = () => {
         });
 
         dispatch(setAdminData(result.data.user));
-        localStorage.setItem("role", "admin");
+        localStorage.setItem("role", result.data.user?.role || "admin");
       } catch (error) {
         console.log(error);
         dispatch(clearAdminData()); // ❌ not logged in
@@ -27,6 +27,22 @@ const useAdminAuth = () => {
     fetchAdmin();
   }, [dispatch]);
 
+  // RBAC: if admin deactivates an employee / their role while they are logged in,
+  // the server answers with code STAFF_ACCESS_REVOKED -> log them out of the panel.
+  useEffect(() => {
+    const interceptorId = axios.interceptors.response.use(
+      (response) => response,
+      (error) => {
+        if (error?.response?.data?.code === "STAFF_ACCESS_REVOKED") {
+          dispatch(clearAdminData());
+          localStorage.removeItem("role");
+        }
+        return Promise.reject(error);
+      },
+    );
+
+    return () => axios.interceptors.response.eject(interceptorId);
+  }, [dispatch]);
 };
 
 export default useAdminAuth;

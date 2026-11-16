@@ -43,7 +43,9 @@ const AdminHeader = () => {
           Hello {adminData?.fullName || "Admin"} 👋
         </h1>
         <p className="text-xs sm:text-sm text-gray-500">
-          Welcome to Admin Panel
+          {adminData?.role === "employee"
+            ? `Welcome to Employee Panel${adminData?.assignedRole?.name ? ` • ${adminData.assignedRole.name}` : ""}`
+            : "Welcome to Admin Panel"}
         </p>
       </div>
 

@@ -29,8 +29,16 @@ const userSchema = new mongoose.Schema(
 
     role: {
       type: String,
-      enum: ["admin", "partner", "customer"],
+      enum: ["admin", "partner", "customer", "employee"],
       required: true,
+    },
+
+    // RBAC -> only used when role === "employee"
+    // (which custom role / permission set this employee belongs to)
+    assignedRole: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Role",
+      default: null,
     },
 
     jobTitle: {

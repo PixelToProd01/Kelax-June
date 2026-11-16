@@ -1,8 +1,8 @@
 import { Router } from "express";
 import {
-  authorizeRoles,
-  isAdminAuthenticated,
-} from "../middlewares/auth.middleware.js";
+  isStaffAuthenticated,
+  checkPermission,
+} from "../middlewares/rbac.middleware.js";
 import { upload } from "../middlewares/upload.middleware.js";
 import {
   createProduct,
@@ -23,12 +23,12 @@ const productRouter = Router();
 
 productRouter.post(
   "/create-product",
+  isStaffAuthenticated,
+  checkPermission("products", "create"),
   upload.fields([
     { name: "image", maxCount: 1 },
     { name: "datasheet", maxCount: 1 },
   ]),
-  isAdminAuthenticated,
-  authorizeRoles("admin"),
   createProduct,
 );
 
@@ -62,8 +62,8 @@ productRouter.get("/get-products/:category", getProductsByCategory);
 ========================================================= */
 productRouter.delete(
   "/delete-product/:id",
-  isAdminAuthenticated,
-  authorizeRoles("admin"),
+  isStaffAuthenticated,
+  checkPermission("products", "delete"),
   deleteProduct,
 );
 
@@ -81,12 +81,12 @@ productRouter.get("/get-product/:id", getProductById)
 ========================================================= */
 productRouter.put(
   "/update-product/:id",
+  isStaffAuthenticated,
+  checkPermission("products", "update"),
   upload.fields([
     { name: "image", maxCount: 1 },
     { name: "datasheet", maxCount: 1 },
   ]),
-  isAdminAuthenticated,
-  authorizeRoles("admin"),
   updateProduct,
 );
 

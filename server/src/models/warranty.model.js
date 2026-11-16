@@ -1,3 +1,4 @@
+
 import mongoose from "mongoose";
 
 const warrantySchema = new mongoose.Schema(
@@ -16,17 +17,6 @@ const warrantySchema = new mongoose.Schema(
       trim: true,
     },
 
-    // productName: {
-    //   type: String,
-    //   required: true,
-    // },
-
-    // modelNumber: {
-    //   type: String,
-    //   required: true,
-    // },
-
-    // Product Reference
     modelNumber: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Product",
@@ -35,38 +25,24 @@ const warrantySchema = new mongoose.Schema(
 
     customerName: {
       type: String,
-      // required: true,
     },
 
     customerEmail: {
       type: String,
-      // required: true,
     },
 
     customerContact: {
       type: String,
-      // required: true,
     },
 
     customerAddress: {
       type: String,
-      // required: true,
     },
-
-    // customerCompany: {
-    //   type: String,
-    //   // required: true,
-    // },
 
     resellerName: {
       type: String,
       required: true,
     },
-
-    // image: {
-    //   type: String,
-    //   required: true,
-    // },
 
     productConfiguration: {
       type: String,
@@ -95,13 +71,9 @@ const warrantySchema = new mongoose.Schema(
       required: true,
     },
   },
-  { timestamps: true },
+  { timestamps: true }
 );
 
-// ✅ ENSURE INDEX FORCE CREATE
-warrantySchema.index({ serialNumber: 1 }, { unique: true });
-
-// export default mongoose.model("Warranty", warrantySchema);
-
 const Warranty = mongoose.model("Warranty", warrantySchema);
+
 export default Warranty;

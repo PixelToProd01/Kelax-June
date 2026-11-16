@@ -4,12 +4,19 @@ import jwt from "jsonwebtoken";
 import User from "../models/user.model.js";
 import Product from "../models/product.model.js";
 import { sendAccountApprovalMail } from "../emails/sendAccountApprovalMail.js";
+import { buildStaffPayload } from "../utils/staffPayload.js";
 
 //  Admin Login
 export const adminLogin = async (req, res) => {
   const { email, password } = req.body;
 
-  const user = await User.findOne({ email });
+  if (!email || !password) {
+    return res.status(400).json({ message: "Email and password are required" });
+  }
+
+  const user = await User.findOne({
+    email: String(email).trim().toLowerCase(),
+  }).populate("assignedRole");
   if (!user || !["admin", "employee"].includes(user.role)) {
     return res.status(403).json({ message: "Admin access only" });
   }
@@ -17,6 +24,25 @@ export const adminLogin = async (req, res) => {
   const match = await bcrypt.compare(password, user.password);
   if (!match) {
     return res.status(401).json({ message: "Invalid credentials" });
+  }
+
+  // RBAC: employee must be active + have an active role
+  if (user.role === "employee") {
+    if (user.userStatus !== "active") {
+      return res
+        .status(403)
+        .json({ message: "Your account is inactive. Contact admin." });
+    }
+    if (!user.assignedRole) {
+      return res
+        .status(403)
+        .json({ message: "No role is assigned to your account. Contact admin." });
+    }
+    if (!user.assignedRole.isActive) {
+      return res
+        .status(403)
+        .json({ message: "Your role is inactive. Contact admin." });
+    }
   }
 
   const token = jwt.sign(
@@ -33,11 +59,12 @@ export const adminLogin = async (req, res) => {
     path: "/",
   });
 
-  const { password: pass, ...safeUser } = user._doc;
+  // safe user + permissions (used by the panel to build sidebar / buttons)
+  const safeUser = buildStaffPayload(user);
 
   res.status(200).json({
     success: true,
-    message: "Admin logged in",
+    message: user.role === "admin" ? "Admin logged in" : "Employee logged in",
     user: safeUser,
     // user,
   });
@@ -65,28 +92,13 @@ export const adminLogout = async (req, res) => {
   }
 };
 
-// ========== Get Admin  ==================
-// controllers/adminController.js
+// ========== Get Admin / Employee (current session) ==================
+// Runs behind isStaffAuthenticated -> req.user + req.permissions are ready
 export const getAdminMe = async (req, res) => {
   try {
-    const token = req.cookies.adminToken;
-
-    if (!token) {
-      return res.status(401).json({ message: "Not authenticated" });
-    }
-
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-    const admin = await User.findById(decoded._id).select("-password");
-
-    // if (!admin || !["admin", "employee"].includes(admin.role)) {
-    if (!admin || admin.role !== "admin") {
-      return res.status(403).json({ message: "Forbidden" });
-    }
-
     res.status(200).json({
       success: true,
-      user: admin,
+      user: buildStaffPayload(req.user),
     });
   } catch (err) {
     res.status(401).json({ message: "Invalid token" });
@@ -94,39 +106,36 @@ export const getAdminMe = async (req, res) => {
 };
 
 // Get Admin Stats for Show on Admin Dashboard
+// (each figure is only returned if the staff member may see that module)
 export const getAdminStats = async (req, res) => {
   try {
-    const totalUsers = await User.countDocuments();
+    const perms = req.permissions;
+    const stats = {};
 
-    const totalPartners = await User.countDocuments({
-      role: "partner",
-    });
+    // Total users (partners + customers) -> admin only
+    if (req.isAdmin) {
+      stats.totalUsers = await User.countDocuments({
+        role: { $in: ["partner", "customer"] },
+      });
+    }
 
-    const totalCustomers = await User.countDocuments({
-      role: "customer",
-    });
+    if (perms.partners?.read) {
+      stats.totalPartners = await User.countDocuments({ role: "partner" });
+    }
 
-    const totalProducts = await Product.countDocuments();
+    if (perms.customers?.read) {
+      stats.totalCustomers = await User.countDocuments({ role: "customer" });
+    }
 
-    const totalServers = await Product.countDocuments({
-      category: "server",
-    });
+    if (perms.products?.read) {
+      stats.totalProducts = await Product.countDocuments();
+      stats.totalServers = await Product.countDocuments({ category: "server" });
+      stats.totalWorkstations = await Product.countDocuments({
+        category: "workstation",
+      });
+    }
 
-    const totalWorkstations = await Product.countDocuments({
-      category: "workstation",
-    });
-
-    res.status(200).json({
-      success: true,
-      stats: {
-        totalUsers,
-        totalPartners,
-        totalCustomers,
-        totalProducts,
-        totalServers,
-        totalWorkstations,
-      },
-    });
+    res.status(200).json({ success: true, stats });
   } catch (error) {
     res.status(500).json({
       success: false,

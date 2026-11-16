@@ -17,6 +17,7 @@ node_modules/
 
 # Environment variables
 .env
+.env.txt
 .env.local
 .env.development
 .env.production

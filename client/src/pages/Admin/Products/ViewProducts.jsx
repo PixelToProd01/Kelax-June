@@ -3,10 +3,14 @@ import axios from "axios";
 import { serverUrl } from "../../../App";
 import toast from "react-hot-toast";
 import EditProductModal from "../../../components/EditProductModal.jsx";
+import usePermission from "../../../hooks/usePermission";
 
 const LIMIT = 20;
 
 const ViewProducts = () => {
+  const { can } = usePermission();
+  const canEdit = can("products", "update");
+  const canDelete = can("products", "delete");
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
@@ -199,6 +203,7 @@ const ViewProducts = () => {
 
                       <td className="px-6 py-5">
 
+                        {canDelete && (
                         <button
                           onClick={() =>
                             deleteProduct(product._id)
@@ -207,7 +212,9 @@ const ViewProducts = () => {
                         >
                           Delete
                         </button>
+                        )}
 
+                        {canEdit && (
                         <button
                           onClick={() =>
                             handleEditClick(product._id)
@@ -216,6 +223,7 @@ const ViewProducts = () => {
                         >
                           Edit
                         </button>
+                        )}
 
                       </td>
 
@@ -258,6 +266,7 @@ const ViewProducts = () => {
                     </span>
                   </p>
 
+                  {canDelete && (
                   <button
                     onClick={() =>
                       deleteProduct(product._id)
@@ -266,7 +275,9 @@ const ViewProducts = () => {
                   >
                     Delete
                   </button>
+                  )}
 
+                  {canEdit && (
                   <button
                     onClick={() =>
                       handleEditClick(product._id)
@@ -275,6 +286,7 @@ const ViewProducts = () => {
                   >
                     Edit
                   </button>
+                  )}
 
                 </div>
 

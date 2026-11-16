@@ -13,10 +13,13 @@ import {
 } from "lucide-react";
 
 import { serverUrl } from "../../../App";
+import usePermission from "../../../hooks/usePermission";
 
 const LIMIT = 10;
 
 const ViewDrivers = () => {
+  const { can } = usePermission();
+  const canDelete = can("drivers", "delete");
   const [drivers, setDrivers] = useState([]);
 
   const [loading, setLoading] = useState(true);
@@ -387,6 +390,7 @@ const ViewDrivers = () => {
                       {/* Delete */}
 
                       <td className="px-5 py-5 text-center">
+                        {canDelete && (
                         <button
                           onClick={() =>
                             deleteDriver(
@@ -411,6 +415,7 @@ const ViewDrivers = () => {
                             </>
                           )}
                         </button>
+                        )}
                       </td>
                     </tr>
                   ))}
@@ -509,6 +514,7 @@ const ViewDrivers = () => {
                 {/* Delete */}
 
                 <div className="border-t border-slate-100 bg-slate-50 p-4 sm:p-5">
+                  {canDelete && (
                   <button
                     onClick={() =>
                       deleteDriver(
@@ -533,6 +539,7 @@ const ViewDrivers = () => {
                       </>
                     )}
                   </button>
+                  )}
                 </div>
               </div>
             ))}

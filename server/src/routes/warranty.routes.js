@@ -7,9 +7,9 @@ import {
   updateWarranty,
 } from "../controllers/warranty.controllers.js";
 import {
-  authorizeRoles,
-  isAdminAuthenticated,
-} from "../middlewares/auth.middleware.js";
+  isStaffAuthenticated,
+  checkPermission,
+} from "../middlewares/rbac.middleware.js";
 import { uploadWarranty } from "../middlewares/warrantyUpload.middleware.js";
 
 const warrantyRouter = express.Router();
@@ -20,8 +20,8 @@ warrantyRouter.get("/check-warranty/:serial", getWarrantyBySerial);
 // ADMIN Can Create a New Warranty
 warrantyRouter.post(
   "/create-warranty",
-  isAdminAuthenticated,
-  authorizeRoles("admin"),
+  isStaffAuthenticated,
+  checkPermission("warranty", "create"),
   uploadWarranty.fields([
     {
       name: "image",
@@ -34,24 +34,24 @@ warrantyRouter.post(
 // ADMIN Can View Warranty
 warrantyRouter.get(
   "/view-warranty",
-  isAdminAuthenticated,
-  authorizeRoles("admin"),
+  isStaffAuthenticated,
+  checkPermission("warranty", "read"),
   getAllWarranties,
 );
 
 // ADMIN Can Update Warranty
 warrantyRouter.put(
   "/update-warranty/:id",
-  isAdminAuthenticated,
-  authorizeRoles("admin"),
+  isStaffAuthenticated,
+  checkPermission("warranty", "update"),
   updateWarranty,
 );
 
 // ADMIN Can Delete Warranty
 warrantyRouter.delete(
   "/delete-warranty/:id",
-  isAdminAuthenticated,
-  authorizeRoles("admin"),
+  isStaffAuthenticated,
+  checkPermission("warranty", "delete"),
   deleteWarranties,
 );
 

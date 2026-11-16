@@ -28,7 +28,7 @@ const AdminLogin = () => {
 
       const user = result.data.user;
       // role check
-      if (user.role !== "admin") {
+      if (!["admin", "employee"].includes(user.role)) {
         toast.error("Not authorized");
         return;
       }
@@ -40,7 +40,11 @@ const AdminLogin = () => {
       dispatch(setAdminData(user));
       dispatch(clearUserData());
 
-      toast.success("Admin Login Successful");
+      toast.success(
+        user.role === "admin"
+          ? "Admin Login Successful"
+          : "Employee Login Successful",
+      );
 
       setTimeout(() => {
         navigate("/admin/dashboard");
@@ -58,11 +62,14 @@ const AdminLogin = () => {
         onSubmit={handleLogin}
         className="bg-white p-6 rounded-lg shadow-md w-96"
       >
-        <h2 className="text-xl font-bold mb-4 text-center">Admin Login</h2>
+        <h2 className="text-xl font-bold mb-4 text-center">
+          Admin / Employee Login
+        </h2>
 
         <input
           type="email"
-          placeholder="Admin Email"
+          placeholder="Email"
+          required
           className="w-full mb-3 p-2 border rounded"
           onChange={(e) => setEmail(e.target.value)}
         />
@@ -70,6 +77,7 @@ const AdminLogin = () => {
         <input
           type="password"
           placeholder="Password"
+          required
           className="w-full mb-4 p-2 border rounded"
           onChange={(e) => setPassword(e.target.value)}
         />

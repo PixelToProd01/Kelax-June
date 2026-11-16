@@ -10,9 +10,9 @@ import {
 } from "../controllers/driver.controller.js";
 
 import {
-  authorizeRoles,
-  isAdminAuthenticated,
-} from "../middlewares/auth.middleware.js";
+  isStaffAuthenticated,
+  checkPermission,
+} from "../middlewares/rbac.middleware.js";
 import { uploadDriver } from "../middlewares/DriverUpload.middleware.js";
 
 const driverRouter = express.Router();
@@ -23,14 +23,14 @@ const driverRouter = express.Router();
 
 driverRouter.post(
   "/create-driver",
+  isStaffAuthenticated,
+  checkPermission("drivers", "create"),
   uploadDriver.fields([
     {
       name: "driver",
       maxCount: 1,
     },
   ]),
-  isAdminAuthenticated,
-  authorizeRoles("admin"),
   createDriver,
 );
 
@@ -63,14 +63,14 @@ driverRouter.get("/get-drivers", getDriversByProduct);
 
 driverRouter.put(
   "/update-driver/:id",
+  isStaffAuthenticated,
+  checkPermission("drivers", "update"),
   uploadDriver.fields([
     {
       name: "driver",
       maxCount: 1,
     },
   ]),
-  isAdminAuthenticated,
-  authorizeRoles("admin"),
   updateDriver,
 );
 
@@ -78,6 +78,11 @@ driverRouter.put(
    DELETE DRIVER
 ========================================================== */
 
-driverRouter.delete("/delete-driver/:id", isAdminAuthenticated, authorizeRoles("admin"), deleteDriver);
+driverRouter.delete(
+  "/delete-driver/:id",
+  isStaffAuthenticated,
+  checkPermission("drivers", "delete"),
+  deleteDriver,
+);
 
 export default driverRouter;

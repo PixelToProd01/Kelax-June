@@ -15,6 +15,11 @@ import {
   authorizeRoles,
   isAdminAuthenticated,
 } from "../middlewares/auth.middleware.js";
+import {
+  isStaffAuthenticated,
+  checkPermission,
+  checkManagedUserPermission,
+} from "../middlewares/rbac.middleware.js";
 // import { getMyProfile } from "../controllers/auth.controllers.js";
 // import { createEmployee } from "../controllers/admin.controller.js";
 
@@ -22,72 +27,51 @@ const adminRouter = Router();
 
 // Admin Login + Logout Router
 adminRouter.post("/login", adminLogin);
-adminRouter.post(
-  "/logout",
-  isAdminAuthenticated,
-  authorizeRoles("admin"),
-  adminLogout,
-);
+// Admin + Employee (any logged-in staff member)
+adminRouter.post("/logout", isStaffAuthenticated, adminLogout);
 
-adminRouter.get(
-  "/me",
-  isAdminAuthenticated,
-  authorizeRoles("admin"),
-  getAdminMe,
-);
+adminRouter.get("/me", isStaffAuthenticated, getAdminMe);
 
 // Route For Update Admin Profile
-adminRouter.put(
-  "/update-profile",
-  isAdminAuthenticated,
-  authorizeRoles("admin"),
-  updateAdminProfile,
-);
+adminRouter.put("/update-profile", isStaffAuthenticated, updateAdminProfile);
 
 // Route For Change Admin Password
-adminRouter.put(
-  "/change-password",
-  isAdminAuthenticated,
-  authorizeRoles("admin"),
-  changeAdminPassword,
-);
+adminRouter.put("/change-password", isStaffAuthenticated, changeAdminPassword);
 
-adminRouter.get(
-  "/stats",
-  isAdminAuthenticated,
-  authorizeRoles("admin"),
-  getAdminStats,
-);
+// Dashboard stats (each figure is filtered by permission inside the controller)
+adminRouter.get("/stats", isStaffAuthenticated, getAdminStats);
 
 // Get All Partners
 adminRouter.get(
   "/partners",
-  isAdminAuthenticated,
-  authorizeRoles("admin"),
+  isStaffAuthenticated,
+  checkPermission("partners", "read"),
   getAllPartners,
 );
 
 // Get All Customers
 adminRouter.get(
   "/customers",
-  isAdminAuthenticated,
-  authorizeRoles("admin"),
+  isStaffAuthenticated,
+  checkPermission("customers", "read"),
   getAllCustomers,
 );
 
-// Approve User Login With Time Set By Admin 
+// Approve User Login With Time Set By Admin
+// (permission depends on target: partner -> partners.update, customer -> customers.update)
 adminRouter.put(
   "/approve-user/:userId",
-  isAdminAuthenticated,
-  authorizeRoles("admin"),
+  isStaffAuthenticated,
+  checkManagedUserPermission("update"),
   approveUser,
 );
 
 // Delete User by Admin
+// (permission depends on target: partner -> partners.delete, customer -> customers.delete)
 adminRouter.delete(
   "/delete-user/:userId",
-  isAdminAuthenticated,
-  authorizeRoles("admin"),
+  isStaffAuthenticated,
+  checkManagedUserPermission("delete"),
   deleteUser,
 );
 

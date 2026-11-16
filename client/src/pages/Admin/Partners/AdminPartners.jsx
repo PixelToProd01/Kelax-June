@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import { serverUrl } from "../../../App";
 import { toast } from "react-hot-toast";
+import usePermission from "../../../hooks/usePermission";
 import {
   CheckCircle,
   XCircle,
@@ -27,6 +28,9 @@ const normalizeStatus = (status) => {
 };
 
 export default function AdminPartners() {
+  const { can } = usePermission();
+  const canEdit = can("partners", "update");
+  const canDelete = can("partners", "delete");
   const [partners, setPartners] = useState([]);
   const [page, setPage] = useState(1);
   const [statusFilter, setStatusFilter] = useState("all");
@@ -241,13 +245,16 @@ export default function AdminPartners() {
   const PartnerStatus = ({ partner }) => (
     <button
       type="button"
-      onClick={() => openActivationModal(partner)}
+      onClick={() => canEdit && openActivationModal(partner)}
+      disabled={!canEdit}
       aria-label={`Change ${partner.fullName || "partner"} status, currently ${normalizeStatus(partner.userStatus)}`}
-      className={`${statusStyle(partner.userStatus)} cursor-pointer`}
+      className={`${statusStyle(partner.userStatus)} ${canEdit ? "cursor-pointer" : "cursor-default"}`}
       title={
         partner.activeTill
           ? `Account valid till ${new Date(partner.activeTill).toLocaleDateString()}`
-          : "Click to activate or set expiry date"
+          : canEdit
+            ? "Click to activate or set expiry date"
+            : "You do not have permission to change status"
       }
     >
       <StatusIcon status={partner.userStatus} />
@@ -429,7 +436,7 @@ export default function AdminPartners() {
                   </p>
                 </td>
                 <td className="p-4">
-                  <DeleteButton partner={partner} />
+                  {canDelete && <DeleteButton partner={partner} />}
                 </td>
               </tr>
             ))}
@@ -519,7 +526,7 @@ export default function AdminPartners() {
               </p>
             </div>
             <div className="border-t pt-3">
-              <DeleteButton partner={partner} />
+              {canDelete && <DeleteButton partner={partner} />}
             </div>
           </article>
         ))}

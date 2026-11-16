@@ -10,9 +10,12 @@ import {
 
 import {
   authorizeRoles,
-  isAdminAuthenticated,
   isAuthenticated,
 } from "../middlewares/auth.middleware.js";
+import {
+  isStaffAuthenticated,
+  checkPermission,
+} from "../middlewares/rbac.middleware.js";
 
 const dealRouter = express.Router();
 
@@ -48,15 +51,15 @@ dealRouter.put(
 // Admin routes
 dealRouter.get(
   "/admin/all",
-  isAdminAuthenticated,
-  authorizeRoles("admin"),
+  isStaffAuthenticated,
+  checkPermission("deals", "read"),
   getAllDeals
 );
 
 dealRouter.patch(
   "/admin/:id/status",
-  isAdminAuthenticated,
-  authorizeRoles("admin"),
+  isStaffAuthenticated,
+  checkPermission("deals", "update"),
   updateDealStatus
 );
 

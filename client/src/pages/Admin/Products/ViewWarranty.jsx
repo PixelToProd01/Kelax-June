@@ -3,6 +3,7 @@ import axios from "axios";
 import { serverUrl } from "../../../App";
 import toast from "react-hot-toast";
 import { Pencil, Trash2, X, RefreshCw } from "lucide-react";
+import usePermission from "../../../hooks/usePermission";
 
 const LIMIT = 20;
 
@@ -42,6 +43,9 @@ const getProductType = (product) =>
   String(product?.type || product?.category || "").toLowerCase();
 
 const ViewWarranty = () => {
+  const { can } = usePermission();
+  const canEdit = can("warranty", "update");
+  const canDelete = can("warranty", "delete");
   const [warranties, setWarranties] = useState([]);
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -208,6 +212,7 @@ const ViewWarranty = () => {
 
   const WarrantyActions = ({ warranty }) => (
     <div className="flex flex-wrap gap-2">
+      {canEdit && (
       <button
         type="button"
         onClick={() => openEditWarranty(warranty)}
@@ -215,6 +220,8 @@ const ViewWarranty = () => {
       >
         <Pencil size={16} /> Edit
       </button>
+      )}
+      {canDelete && (
       <button
         type="button"
         onClick={() => deleteWarranty(warranty._id)}
@@ -222,6 +229,7 @@ const ViewWarranty = () => {
       >
         <Trash2 size={16} /> Delete
       </button>
+      )}
     </div>
   );
 

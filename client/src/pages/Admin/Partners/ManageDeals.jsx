@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import usePermission from "../../../hooks/usePermission";
 import {
   RefreshCw,
   Search,
@@ -77,6 +78,8 @@ function Detail({ icon: Icon, label, value }) {
 }
 
 export default function ManageDeals() {
+  const { can } = usePermission();
+  const canReview = can("deals", "update");
   const [deals, setDeals] = useState([]);
   const [loading, setLoading] = useState(true);
   const [savingId, setSavingId] = useState(null);
@@ -572,7 +575,11 @@ export default function ManageDeals() {
                       </p>
                     </div>
 
-                    {isSubmitted ? (
+                    {isSubmitted && !canReview ? (
+                      <span className="text-xs font-medium text-slate-500">
+                        View only – you do not have permission to approve or reject
+                      </span>
+                    ) : isSubmitted ? (
                       <div className="flex flex-wrap gap-2">
                         <button
                           type="button"

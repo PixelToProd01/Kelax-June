@@ -16,6 +16,7 @@ import productRouter from "./routes/product.routes.js";
 import warrantyRouter from "./routes/warranty.routes.js";
 import driverRouter from "./routes/driver.routes.js";
 import dealRouter from "./routes/deal.routes.js";
+import rbacRouter from "./routes/rbac.routes.js";
 
 // Import Routes
 // import otpRoutes from "./routes/otp.routes.js";
@@ -80,6 +81,9 @@ app.use("/api/driver", driverRouter);
 
 // -------------------  Add alongside your existing API routes:   ----------------------
 app.use("/api/deals", dealRouter);
+
+// -------------------  RBAC: Roles + Employees (admin only)  ----------------------
+app.use("/api/rbac", rbacRouter);
 
 // app.use("/api/otp", otpRoutes);
 // app.use("/api/auth", authRoutes);
