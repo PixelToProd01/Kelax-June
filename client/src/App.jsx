@@ -38,6 +38,9 @@ import AdminLogin from "./pages/Admin/AdminLogin.jsx";
 import AdminLayout from "./layouts/Admin/AdminLayout.jsx";
 import AdminDashboard from "./pages/Admin/AdminDashboard.jsx";
 import AdminProtectedRoute from "./routes/AdminProtectedRoute.jsx";
+import PermissionRoute from "./routes/PermissionRoute.jsx";
+import ManageRoles from "./pages/Admin/AccessControl/ManageRoles.jsx";
+import ManageEmployees from "./pages/Admin/AccessControl/ManageEmployees.jsx";
 // import CreateProduct from "./pages/Admin/CreateProduct.jsx";
 import useAdminAuth from "./hooks/useAdminAuth.js";
 import useUserAuth from "./hooks/useUserAuth.js";
@@ -234,6 +237,11 @@ const App = () => {
           path="/admin/login"
           element={!adminData ? <AdminLogin /> : <Navigate to="/" />}
         />
+        {/* Employees use the same staff login */}
+        <Route
+          path="/employee/login"
+          element={<Navigate to="/admin/login" replace />}
+        />
         {/* <Route path="admin/dashboard" element={<AdminLayout /> }/> */}
         <Route element={<AdminProtectedRoute />}>
           <Route path="/admin" element={<AdminLayout />}>
@@ -241,15 +249,41 @@ const App = () => {
             <Route path="dashboard" element={<AdminDashboard />} />
 
             <Route path="profile" element={<AdminProfile />} />
-            <Route path="create-product" element={<CreateProducts />} />
-            <Route path="view-product" element={<ViewProducts />} />
-            <Route path="add-warranty" element={<AddWarranty />} />
-            <Route path="view-warranty" element={<ViewWarranty />} />
-            <Route path="upload-drivers" element={<UploadDrivers />} />
-            <Route path="view-drivers" element={<ViewDrivers />} />
-            <Route path="partners" element={<AdminPartners />} />
-            <Route path="customers" element={<AdminCustomers />} />
-            <Route path="manage-deals" element={<ManageDeals />} />
+
+            {/* ================= RBAC: every page needs its permission ================= */}
+            <Route element={<PermissionRoute module="products" action="create" />}>
+              <Route path="create-product" element={<CreateProducts />} />
+            </Route>
+            <Route element={<PermissionRoute module="products" action="read" />}>
+              <Route path="view-product" element={<ViewProducts />} />
+            </Route>
+            <Route element={<PermissionRoute module="warranty" action="create" />}>
+              <Route path="add-warranty" element={<AddWarranty />} />
+            </Route>
+            <Route element={<PermissionRoute module="warranty" action="read" />}>
+              <Route path="view-warranty" element={<ViewWarranty />} />
+            </Route>
+            <Route element={<PermissionRoute module="drivers" action="create" />}>
+              <Route path="upload-drivers" element={<UploadDrivers />} />
+            </Route>
+            <Route element={<PermissionRoute module="drivers" action="read" />}>
+              <Route path="view-drivers" element={<ViewDrivers />} />
+            </Route>
+            <Route element={<PermissionRoute module="partners" action="read" />}>
+              <Route path="partners" element={<AdminPartners />} />
+            </Route>
+            <Route element={<PermissionRoute module="customers" action="read" />}>
+              <Route path="customers" element={<AdminCustomers />} />
+            </Route>
+            <Route element={<PermissionRoute module="deals" action="read" />}>
+              <Route path="manage-deals" element={<ManageDeals />} />
+            </Route>
+
+            {/* Admin only: roles + employees */}
+            <Route element={<PermissionRoute adminOnly />}>
+              <Route path="roles" element={<ManageRoles />} />
+              <Route path="employees" element={<ManageEmployees />} />
+            </Route>
             {/* <Route path="create-product" element={<CreateProduct />} /> */}
           </Route>
         </Route>
