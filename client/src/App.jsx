@@ -76,6 +76,7 @@ import AnalyticsTracker from "./components/AnalyticsTracker.jsx";
 import ManageDeals from "./pages/Admin/Partners/ManageDeals.jsx";
 import DealRegistration from "./pages/Users/Partner/DealRegistration.jsx";
 import MyDeals from "./pages/Users/Partner/MyDeals.jsx";
+import CustomerProfile from "./pages/Users/Customer/CustomerProfile.jsx";
 
 // export const serverUrl = "http://localhost:8000"; // Work on Laptop only  ------------ 1s
 
@@ -140,6 +141,7 @@ const App = () => {
           <Route path="/customer" element={<CustomerLayout />}>
             <Route index element={<CustomerDashboard />} />
             <Route path="dashboard" element={<CustomerDashboard />} />
+            <Route path="profile" element={<CustomerProfile />} />
             {/* <Route path="create-product" element={<CreateProduct />} /> */}
           </Route>
         </Route>
